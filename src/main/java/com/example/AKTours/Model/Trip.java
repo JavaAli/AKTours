@@ -5,4 +5,5 @@ public class Trip {
     String To;
     String DepartureDate;
     String ReturnDate;
+    String blablav;
 }

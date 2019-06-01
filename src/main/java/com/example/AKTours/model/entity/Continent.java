@@ -17,7 +17,7 @@ public class Continent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int continent_id;
+    private Long continent_id;
 
     @Column(name = "continent_name")
     private String name;

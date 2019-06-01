@@ -14,7 +14,7 @@ import javax.persistence.*;
 public class Airport {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private Long id;
 
     @Column(name="airport_name")
     private String name;

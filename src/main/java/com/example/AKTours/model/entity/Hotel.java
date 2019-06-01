@@ -19,7 +19,7 @@ public class Hotel {
     @Column(name="hotel_name")
     private String name;
 
-    @Column(name = "standart")
+    @Column(name = "standard")
     private String standard;
 
     @Column(name = "description")

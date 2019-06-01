@@ -6,4 +6,5 @@ public class Trip {
     String DepartureDate;
     String ReturnDate;
     String blablav;
+    String blabla;
 }

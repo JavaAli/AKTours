@@ -1,0 +1,1 @@
+insert into hotels (id, description, standard, hotel_name) value (1000,'Small hotel','4Stars','Hilton');

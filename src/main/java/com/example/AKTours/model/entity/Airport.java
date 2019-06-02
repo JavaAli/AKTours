@@ -13,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class Airport {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name="airport_name")

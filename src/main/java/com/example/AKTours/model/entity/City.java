@@ -22,11 +22,11 @@ public class City {
     private String name;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "hotel_id")
+    @JoinColumn(name = "city_id")
     private Set<Hotel> hotels;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "airport_id")
+    @JoinColumn(name = "city_id")
     private Set<Airport> airports;
 
 

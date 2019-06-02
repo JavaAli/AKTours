@@ -1,4 +1,4 @@
-package com.example.AKTours.service;
+package com.example.AKTours.web.service;
 
 import com.example.AKTours.repository.AirportRepository;
 import org.springframework.stereotype.Service;

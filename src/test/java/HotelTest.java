@@ -1,5 +1,5 @@
 //
-//import com.example.AKTours.service.HotelService;
+//import HotelService;
 //import org.junit.Test;
 //import org.mockito.Mockito;
 //

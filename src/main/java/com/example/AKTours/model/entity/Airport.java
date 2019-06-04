@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "Airports")
@@ -19,4 +20,11 @@ public class Airport {
     @Column(name="airport_name")
     private String name;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "home_airport_id_pk")
+    private Set<Trip> tripsHome;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "destin_airport_id_pk")
+    private Set<Trip> tripsDestina;
 }

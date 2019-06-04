@@ -26,9 +26,7 @@ public class HotelController {
 
     @RequestMapping(value = "/show/{standard}", method = RequestMethod.GET)
     public String hotelStandard (Model model, @PathVariable("standard") String standard )throws Exception{
-
         Model hotels2 = model.addAttribute("standardHotel", hotelService.findHotelByStandard(standard));
-
         return "standardHotel1";
     }
 

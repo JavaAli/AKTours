@@ -15,6 +15,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Hotel {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -31,4 +32,6 @@ public class Hotel {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "hotel_id_pk")
     private Set<Trip> trips;
+
+
 }

@@ -36,5 +36,25 @@ public class HotelService {
         return hotelRepository.findHotelByName(name);
     }
 
+    public List<Hotel> findHotelByCityName(String name) {
+
+        String hilton = "London";
+        String mariott = "Paris";
+        String zacisze = "Wachock";
+        String leCorusiere = "Teheran";
+        if (hilton.equals(name)){
+           return hotelRepository.findHotelsInLondon(name);
+        } else if(mariott.equals(name)) {
+            return hotelRepository.findHotelsInParis(name);
+        }else if (zacisze.equals(name)){
+            return hotelRepository.findHotelsInWachock(name);
+        }else if (leCorusiere.equals(name)){
+            return hotelRepository.findHotelsInTeheran(name);
+        }else {
+            return null;
+        }
+
+
+    }
 
 }

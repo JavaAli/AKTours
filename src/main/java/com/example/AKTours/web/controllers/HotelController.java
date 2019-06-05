@@ -1,7 +1,11 @@
 package com.example.AKTours.web.controllers;
 
+import com.example.AKTours.model.entity.Hotel;
 import com.example.AKTours.web.service.HotelService;
-import io.swagger.annotations.*;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,21 +26,26 @@ public class HotelController {
         this.hotelService = hotelService;
     }
 
-    @ApiOperation(value = "Shows all hotels")
+    @ApiOperation(value = "Shows all hotels",response = List.class)
     @RequestMapping(method = RequestMethod.GET)
     public String hotels(Model model) {
         model.addAttribute("hotel", hotelService.findAll());
         return "hotel";
     }
 
-    @ApiOperation(value = "Displays hotels of a given standard")
+    @ApiOperation(value = "Displays hotels of a given standard", response = List.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved list of hotels of given standard")})
     @RequestMapping(value = "/show/{standard}", method = RequestMethod.GET)
-    public String hotelStandard(Model model, @PathVariable("standard") String standard) throws Exception {
+    public String hotelStandard(Model model,
+                                @ApiParam(value = "Number of stars", required = true)
+                                @PathVariable("standard") String standard) throws Exception {
+        log.info("Invoke findHotelByStandard method");
         Model hotels2 = model.addAttribute("standardHotel", hotelService.findHotelByStandard(standard));
         return "standardHotel1";
     }
 
-    @ApiOperation(value = "Displays hotels by name")
+    @ApiOperation(value = "Displays hotels by name", response = Hotel.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully found hotel")})
     @RequestMapping(value = "/name/{name}", method = RequestMethod.GET)

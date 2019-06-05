@@ -37,5 +37,12 @@ public class HotelController {
         Model hotelName = model.addAttribute("hotelName", hotelService.findByHotelName(name));
         return "hotelName";
     }
+
+    @RequestMapping(value = "/byCity/{name}", method = RequestMethod.GET)
+    public String findHotelByCityName(Model model, @PathVariable("name") String name)throws Exception{
+        Model hotelName1 = model.addAttribute("hotelName1", hotelService.findHotelByCityName(name));
+        return "hotelByCityName";
+    }
+
 }
 

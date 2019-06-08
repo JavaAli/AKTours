@@ -5,10 +5,12 @@ import com.example.AKTours.model.entity.Hotel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface HotelRepository extends CrudRepository<Hotel, Long> , JpaRepository<Hotel, Long> {
+@Repository
+public interface HotelRepository extends CrudRepository<Hotel, Long>, JpaRepository<Hotel, Long> {
 
     public List<Hotel> findHotelByStandard(String standard);
 

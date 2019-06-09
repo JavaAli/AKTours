@@ -1,7 +1,22 @@
 package com.example.AKTours.repository;
 
 import com.example.AKTours.model.entity.Airport;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.List;
+
 public interface AirportRepository extends CrudRepository<Airport, Long> {
+
+     Airport findAirportByName(String name);
+
+    @Query(value = "SELECT airport_name,id from airports where city_id = 1", nativeQuery = true)
+    public List<Airport> findAirportsInLondon(String name);
+
+    @Query(value = "SELECT airport_name,id from airports where city_id = 2", nativeQuery = true)
+    public List<Airport> findAirportsInParis(String name);
+
+    @Query(value = "SELECT airport_name,id from airports where city_id = 5", nativeQuery = true)
+    public List<Airport> findAirportsInKatowice(String name);
+
 }

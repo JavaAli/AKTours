@@ -26,7 +26,7 @@ public class HotelController {
         this.hotelService = hotelService;
     }
 
-    @ApiOperation(value = "Shows all hotels",response = List.class)
+    @ApiOperation(value = "Shows all hotels", response = List.class)
     @RequestMapping(method = RequestMethod.GET)
     public String hotels(Model model) {
         model.addAttribute("hotel", hotelService.findAll());

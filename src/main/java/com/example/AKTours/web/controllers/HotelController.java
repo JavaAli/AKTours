@@ -1,6 +1,7 @@
 package com.example.AKTours.web.controllers;
 
 import com.example.AKTours.model.entity.Hotel;
+import com.example.AKTours.web.exceptions.HotelNotFoundException;
 import com.example.AKTours.web.service.HotelService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -39,7 +40,7 @@ public class HotelController {
     @RequestMapping(value = "/show/{standard}", method = RequestMethod.GET)
     public String hotelStandard(Model model,
                                 @ApiParam(value = "Number of stars", required = true)
-                                @PathVariable("standard") String standard) throws Exception {
+                                @PathVariable("standard") String standard) throws HotelNotFoundException {
         log.info("Invoke findHotelByStandard method");
         Model hotels2 = model.addAttribute("standardHotel", hotelService.findHotelByStandard(standard));
         return "standardHotel1";
@@ -51,7 +52,7 @@ public class HotelController {
     @RequestMapping(value = "/name/{name}", method = RequestMethod.GET)
     public String findByHotelName(Model model,
                                   @ApiParam(value = "Name of the hotel", required = true)
-                                  @PathVariable("name") String name) throws Exception {
+                                  @PathVariable("name") String name) throws HotelNotFoundException {
         log.info("Invoke findByHotelName method");
         Model hotelName = model.addAttribute("hotelName", hotelService.findByHotelName(name));
         return "hotelName";

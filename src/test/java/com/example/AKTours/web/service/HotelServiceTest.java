@@ -2,6 +2,7 @@ package com.example.AKTours.web.service;
 
 import com.example.AKTours.model.entity.Hotel;
 import com.example.AKTours.repository.HotelRepository;
+import com.example.AKTours.web.exceptions.HotelNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +21,7 @@ public class HotelServiceTest {
     private HotelService hotelService;
     private Hotel hotelOne;
     private Hotel hotelTwo;
-    private List<Hotel> stars3hotels;
+    private List<Hotel> selectedHotels;
     private List<Hotel> allHotels;
 
     @MockBean
@@ -43,9 +44,9 @@ public class HotelServiceTest {
                 .description("Hotel in the centre of Naples")
                 .trips(null)
                 .build();
-        stars3hotels = new ArrayList<>();
+        selectedHotels = new ArrayList<>();
         allHotels = new ArrayList<>();
-        stars3hotels.add(hotelTwo);
+        selectedHotels.add(hotelTwo);
         allHotels.add(hotelOne);
         allHotels.add(hotelTwo);
 
@@ -59,16 +60,22 @@ public class HotelServiceTest {
     }
 
     @Test
-    public void findHotelByStandard() {
-        Mockito.when(hotelRepository.findHotelByStandard(Mockito.any())).thenReturn(stars3hotels);
+    public void findHotelByStandard() throws HotelNotFoundException {
+        Mockito.when(hotelRepository.findHotelByStandard(Mockito.any())).thenReturn(selectedHotels);
         List<Hotel> hotelsFound = hotelService.findHotelByStandard("4stars");
         assertThat(hotelsFound.get(0).getName()).isEqualTo(hotelTwo.getName());
     }
 
     @Test
-    public void findByHotelName() {
-        Mockito.when(hotelRepository.findHotelByName(Mockito.anyString())).thenReturn(hotelTwo);
-        Hotel result=hotelService.findByHotelName("Bambino");
-        assertThat(result.getId()).isEqualTo(2L);
+    public void findByHotelName() throws HotelNotFoundException {
+        Mockito.when(hotelRepository.findHotelByName(Mockito.anyString())).thenReturn(selectedHotels);
+        List<Hotel> result = hotelService.findByHotelName("Bambino");
+        assertThat(result.get(0).getId()).isEqualTo(2L);
     }
+    @Test(expected = HotelNotFoundException.class)
+    public void findNonExcistingHotel() throws HotelNotFoundException {
+        Mockito.when(hotelRepository.findHotelByName(Mockito.anyString())).thenReturn(new ArrayList<>());
+        List<Hotel> result = hotelService.findByHotelName("XXX");
+    }
+
 }

@@ -14,7 +14,7 @@ public interface HotelRepository extends CrudRepository<Hotel, Long>, JpaReposit
 
     public List<Hotel> findHotelByStandard(String standard);
 
-    public Hotel findHotelByName(String name);
+    public List<Hotel> findHotelByName(String name);
 
     @Query(value = "SELECT id,hotel_name,description,standard from hotels where city_id = 1", nativeQuery = true)
     List<Hotel> findHotelsInLondon(String name);

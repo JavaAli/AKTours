@@ -24,7 +24,7 @@ public class CountryController {
     }
 
     @RequestMapping(value = "/show/{name}", method = RequestMethod.GET)
-    public String reviews1 (Model model, @PathVariable String name )throws Exception{
+    public String reviews1(Model model, @PathVariable String name) throws Exception {
 
         Model country = model.addAttribute("oneCountry", countryService.findByCountryName(name));
 

@@ -28,16 +28,4 @@ public interface HotelRepository extends JpaRepository<Hotel, Long> {
     List<Hotel> findHotelsInTeheran(String name);
 
 
-//
-//    @Query(value = "SELECT id,hotel_name,description,standard from hotels where city_id = 1", nativeQuery = true)
-//    List<Hotel> findHotelsInLondon(String name);
-//
-//    @Query(value = "SELECT id,hotel_name,description,standard from hotels where city_id = 2", nativeQuery = true)
-//    List<Hotel> findHotelsInParis(String name);
-//
-//    @Query(value = "SELECT id,hotel_name,description,standard from hotels where city_id = 3", nativeQuery = true)
-//    List<Hotel> findHotelsInWachock(String name);
-//
-//    @Query(value = "SELECT id,hotel_name,description,standard from hotels where city_id = 4", nativeQuery = true)
-//    List<Hotel> findHotelsInTeheran(String name);
 }

@@ -10,15 +10,14 @@ import io.swagger.annotations.ApiResponses;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @Log4j2
-@Controller
-@RequestMapping(value = {"/", "/hotels"})
+@RestController
+@CrossOrigin(origins = "http://localhost:4200")
+
 public class HotelController {
 
     private final HotelService hotelService;
@@ -28,10 +27,9 @@ public class HotelController {
     }
 
     @ApiOperation(value = "Shows all hotels",response = List.class)
-    @RequestMapping(method = RequestMethod.GET)
-    public String hotels(Model model) {
-        model.addAttribute("hotel", hotelService.findAll());
-        return "hotel";
+    @RequestMapping(value = "/hotels", method = RequestMethod.GET)
+    public List<Hotel> hotels(Model model) {
+        return hotelService.findAll();
     }
 
     @ApiOperation(value = "Displays hotels of a given standard", response = List.class)

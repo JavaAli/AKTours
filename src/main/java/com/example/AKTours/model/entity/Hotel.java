@@ -1,18 +1,19 @@
 package com.example.AKTours.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 import java.util.Set;
-
+@JsonIgnoreProperties({"trips"})
+@AllArgsConstructor
 @Builder
 @Entity
 @Table(name = "Hotels")
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class Hotel {
 
@@ -29,7 +30,7 @@ public class Hotel {
     @Column(name = "description")
     private String description;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = Trip.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "hotel_id_pk")
     private Set<Trip> trips;
 

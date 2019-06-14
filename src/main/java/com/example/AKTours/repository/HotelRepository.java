@@ -12,9 +12,9 @@ import java.util.List;
 @Repository
 public interface HotelRepository extends CrudRepository<Hotel, Long>, JpaRepository<Hotel, Long> {
 
-    public List<Hotel> findHotelByStandard(String standard);
+     List<Hotel> findHotelByStandard(String standard);
 
-    public Hotel findHotelByName(String name);
+     Hotel findHotelByName(String name);
 
     @Query(value = "SELECT id,hotel_name,description,standard from hotels where city_id = 1", nativeQuery = true)
     List<Hotel> findHotelsInLondon(String name);
@@ -29,16 +29,4 @@ public interface HotelRepository extends CrudRepository<Hotel, Long>, JpaReposit
     List<Hotel> findHotelsInTeheran(String name);
 
 
-//
-//    @Query(value = "SELECT id,hotel_name,description,standard from hotels where city_id = 1", nativeQuery = true)
-//    List<Hotel> findHotelsInLondon(String name);
-//
-//    @Query(value = "SELECT id,hotel_name,description,standard from hotels where city_id = 2", nativeQuery = true)
-//    List<Hotel> findHotelsInParis(String name);
-//
-//    @Query(value = "SELECT id,hotel_name,description,standard from hotels where city_id = 3", nativeQuery = true)
-//    List<Hotel> findHotelsInWachock(String name);
-//
-//    @Query(value = "SELECT id,hotel_name,description,standard from hotels where city_id = 4", nativeQuery = true)
-//    List<Hotel> findHotelsInTeheran(String name);
 }

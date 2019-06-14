@@ -13,7 +13,7 @@ import java.util.stream.StreamSupport;
 @Service
 public class CountryService {
 
-    @Autowired
+    // @Autowired
     private final CountryRepository countryRepository;
 
     public CountryService(CountryRepository countryRepository) {

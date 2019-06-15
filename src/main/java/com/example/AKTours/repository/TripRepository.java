@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface TripRepository extends JpaRepository<Trip, Long> {
-    @Query(value = "SELECT trip FROM Trip trip JOIN Hotel hotel ON hotel.id=trip.hotel_id_pk WHERE h.hotel_name= 1")
-    List<Hotel> findTripByHotelName(String name);
+    @Query(value = "SELECT trip FROM Trip trip JOIN Hotel hotel ON hotel.id=trip.hotel WHERE hotel.name= ?1")
+    List<Trip> findTripByHotelName(String name);
 }

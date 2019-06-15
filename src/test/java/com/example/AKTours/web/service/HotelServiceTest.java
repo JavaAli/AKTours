@@ -2,7 +2,7 @@ package com.example.AKTours.web.service;
 
 import com.example.AKTours.model.entity.Hotel;
 import com.example.AKTours.repository.HotelRepository;
-import com.example.AKTours.web.exceptions.HotelNotFoundException;
+import com.example.AKTours.web.exceptions.EntityNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -60,20 +60,20 @@ public class HotelServiceTest {
     }
 
     @Test
-    public void findHotelByStandard() throws HotelNotFoundException {
+    public void findHotelByStandard() throws EntityNotFoundException {
         Mockito.when(hotelRepository.findHotelByStandard(Mockito.any())).thenReturn(selectedHotels);
         List<Hotel> hotelsFound = hotelService.findHotelByStandard("4stars");
         assertThat(hotelsFound.get(0).getName()).isEqualTo(hotelTwo.getName());
     }
 
     @Test
-    public void findByHotelName() throws HotelNotFoundException {
+    public void findByHotelName() throws EntityNotFoundException {
         Mockito.when(hotelRepository.findHotelByName(Mockito.anyString())).thenReturn(selectedHotels);
         List<Hotel> result = hotelService.findByHotelName("Bambino");
         assertThat(result.get(0).getId()).isEqualTo(2L);
     }
-    @Test(expected = HotelNotFoundException.class)
-    public void findNonExcistingHotel() throws HotelNotFoundException {
+    @Test(expected = EntityNotFoundException.class)
+    public void findNonExcistingHotel() throws EntityNotFoundException {
         Mockito.when(hotelRepository.findHotelByName(Mockito.anyString())).thenReturn(new ArrayList<>());
         List<Hotel> result = hotelService.findByHotelName("XXX");
     }

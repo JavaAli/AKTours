@@ -6,8 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.util.Set;
+
 @JsonIgnoreProperties({"trips"})
 @AllArgsConstructor
 @Builder
@@ -21,7 +23,7 @@ public class Hotel {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name="hotel_name")
+    @Column(name = "hotel_name")
     private String name;
 
     @Column(name = "standard")

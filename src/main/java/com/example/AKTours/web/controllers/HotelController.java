@@ -1,14 +1,12 @@
 package com.example.AKTours.web.controllers;
 
 import com.example.AKTours.model.entity.Hotel;
-import com.example.AKTours.web.exceptions.HotelNotFoundException;
+import com.example.AKTours.web.exceptions.EntityNotFoundException;
 import com.example.AKTours.web.service.HotelService;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +14,7 @@ import java.util.List;
 
 @Log4j2
 @RestController
+@Api(value="Hotel Management System")
 @CrossOrigin(origins = "http://localhost:4200")
 
 public class HotelController {
@@ -26,10 +25,10 @@ public class HotelController {
         this.hotelService = hotelService;
     }
 
-    @ApiOperation(value = "Shows all hotels",response = List.class)
+    @ApiOperation(value = "Shows all hotels",response = Hotel.class)
     @RequestMapping(value = "/hotels", method = RequestMethod.GET)
-    public List<Hotel> hotels(Model model) {
-        return hotelService.findAll();
+    public ResponseEntity<Object> hotels() {
+        return new ResponseEntity<>(hotelService.findAll(), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Displays hotels of a given standard", response = List.class)
@@ -38,7 +37,7 @@ public class HotelController {
     @RequestMapping(value = "/show/{standard}", method = RequestMethod.GET)
     public String hotelStandard(Model model,
                                 @ApiParam(value = "Number of stars", required = true)
-                                @PathVariable("standard") String standard) throws HotelNotFoundException {
+                                @PathVariable("standard") String standard) throws EntityNotFoundException {
         log.info("Invoke findHotelByStandard method");
         Model hotels2 = model.addAttribute("standardHotel", hotelService.findHotelByStandard(standard));
         return "standardHotel1";
@@ -50,7 +49,7 @@ public class HotelController {
     @RequestMapping(value = "/name/{name}", method = RequestMethod.GET)
     public String findByHotelName(Model model,
                                   @ApiParam(value = "Name of the hotel", required = true)
-                                  @PathVariable("name") String name) throws HotelNotFoundException {
+                                  @PathVariable("name") String name) throws EntityNotFoundException {
         log.info("Invoke findByHotelName method");
         Model hotelName = model.addAttribute("hotelName", hotelService.findByHotelName(name));
         return "hotelName";

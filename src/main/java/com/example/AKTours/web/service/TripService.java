@@ -24,19 +24,19 @@ public class TripService {
         this.tripRepository = tripRepository;
     }
 
-//    public List<TripDTO> findAllTrips() throws EntityNotFoundException {
-//        log.info("Invoke TripRepository findAllTrips");
-//        if (!tripRepository.findAll().isEmpty()) {
-//            List<TripDTO> tripsCollected = StreamSupport.stream(tripRepository.findAll().spliterator(), false)
+    public List<Trip> findAllTrips() throws EntityNotFoundException {
+        log.info("Invoke TripRepository findAllTrips");
+        if (!tripRepository.findAll().isEmpty()) {
+            List<Trip> tripsCollected = StreamSupport.stream(tripRepository.findAll().spliterator(), false)
 //                    .map(Trip -> convertTripToDto(Trip))
-//                    .collect(Collectors.toList());
-//
-//            return tripsCollected;
-////        } else {
-////            throw new EntityNotFoundException("Trip repository is empty");
-//        }
-//
-//    }
+                    .collect(Collectors.toList());
+
+            return tripsCollected;
+        } else {
+            throw new EntityNotFoundException("Trip repository is empty");
+        }
+
+    }
         public List<Trip> findTripByHotelName (String hotelName) throws EntityNotFoundException {
             log.info("Invoke TripRepository findHotelByStandard using " + hotelName);
             String hilton = "Hilton";

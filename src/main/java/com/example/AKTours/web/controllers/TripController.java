@@ -29,15 +29,15 @@ public class TripController {
         this.tripService = tripService;
     }
 
-//    @ApiOperation(value = "Displays all trips ", response = TripDTO.class)
-//    @ApiResponses(value = {
-//            @ApiResponse(code = 200, message = "Successfully found trips")})
-//    @RequestMapping(value = "/trips", method = RequestMethod.GET)
-//    public ResponseEntity<Object> findAllTrips() throws EntityNotFoundException {
-//        log.info("Invoke findAllTrips method");
-//        return new ResponseEntity<>(tripService.findAllTrips(), HttpStatus.OK);
-//
-//    }
+    @ApiOperation(value = "Displays all trips ", response = Trip.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully found trips")})
+    @RequestMapping(value = "/trips", method = RequestMethod.GET)
+    public ResponseEntity<Object> findAllTrips() throws EntityNotFoundException {
+        log.info("Invoke findAllTrips method");
+        return new ResponseEntity<>(tripService.findAllTrips(), HttpStatus.OK);
+
+    }
 
     @ApiOperation(value = "Displays trips by hotel name", response = List.class)
     @ApiResponses(value = {

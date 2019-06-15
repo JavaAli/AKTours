@@ -4,7 +4,6 @@ import com.example.AKTours.model.dto.TripDTO;
 import com.example.AKTours.model.entity.BoardType;
 import com.example.AKTours.model.entity.Hotel;
 import com.example.AKTours.model.entity.Trip;
-import com.example.AKTours.repository.HotelRepository;
 import com.example.AKTours.repository.TripRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,34 +17,28 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 public class TripServiceTest {
+    private TripService tripService;
     private Hotel hotel;
     private Trip trip;
     private TripDTO tripDTO;
-    private TripService tripService;
-    private List<TripDTO> tripDTOS;
-    private List<Trip> tripList;
+    private List<TripDTO> tripsDTO;
+    private List<Trip> trips;;
+
     @MockBean
     private TripRepository tripRepository;
 
     @Before
     public void setUp() {
-
-        hotel = Hotel.builder()
-                .id(1L)
-                .standard("4Stars")
-                .name("Tropicana")
-                .description("Hotel on Italy cost")
-                .trips(null)
-                .build();
+        tripService=new TripService(tripRepository);
         trip = Trip.builder()
-                .hotel(hotel)
-                .ReturnDate(LocalDate.of(2019, 3, 3).plusWeeks(2))
-                .DepartureDate(LocalDate.of(2019, 3, 3))
+                .returnDate(LocalDate.of(2019, 3, 3).plusWeeks(2))
+                .departureDate(LocalDate.of(2019, 3, 3))
                 .childrenVacancy(1)
                 .adultVacancy(3)
                 .childrenPrice(BigDecimal.valueOf(3000))
@@ -55,8 +48,23 @@ public class TripServiceTest {
                 .boardType(BoardType.BB)
                 .promoPrice(BigDecimal.valueOf(3400))
                 .build();
-        tripList = new ArrayList<>();
-        tripList.add(trip);
+        trips=new ArrayList<>();
+        trips.add(trip);
+        hotel = Hotel.builder()
+                .id(1L)
+                .standard("4Stars")
+                .name("Tropicana")
+                .description("Hotel on Italy cost")
+                .trips(null)
+                .build();
+
+        tripDTO=TripDTO.builder()
+                .returnDate("2019-03-17")
+                .departureDate("2019-03-03")
+                .numberOfDays(14)
+                .build();
+tripsDTO=new ArrayList<>();
+tripsDTO.add(tripDTO);
 
 //        tripDTO=TripDTO.builder()
 //                .adultPrice(4000)
@@ -64,8 +72,8 @@ public class TripServiceTest {
 //                .adultVacancy(3)
 //                .childrenVacancy(1)
 //                .hotelId(1L)
-//                .ReturnDate("2019-03-17")
-//                .DepartureDate("2019-03-03")
+//                .returnDate("2019-03-17")
+//                .departureDate("2019-03-03")
 //                .adultPrice(4000)
 //                .childrenPrice(3000)
 //                .promoPrice(3400)
@@ -77,8 +85,10 @@ public class TripServiceTest {
 
     @Test
     public void findAllTrips() {
-        Mockito.when(tripRepository.findAll()).thenReturn(tripList);
-
+        Mockito.when(tripRepository.findAll()).thenReturn(trips);
+        List<TripDTO> tripsFound = tripService.findAllTrips();
+        assertThat(tripsFound.size()).isEqualTo(1);
+        assertThat(tripsFound.get(0)).isEqualTo(tripDTO);
     }
 
     @Test
@@ -88,6 +98,8 @@ public class TripServiceTest {
     @Test
     public void convert() {
         TripDTO newDTO = tripService.convertTripToDto(trip);
-//        assertEquals(newDTO.getAdultPrice(),tripDTO.getAdultPrice());
+        assertThat(newDTO.getAdultPrice()).isEqualTo(tripDTO.getAdultPrice());
+        assertThat(newDTO.getDepartureDate()).isEqualTo(tripDTO.getDepartureDate());
+        assertThat(newDTO.getReturnDate()).isEqualTo(tripDTO.getReturnDate());
     }
 }

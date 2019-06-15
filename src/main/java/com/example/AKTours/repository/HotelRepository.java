@@ -1,6 +1,5 @@
 package com.example.AKTours.repository;
 
-
 import com.example.AKTours.model.entity.Hotel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

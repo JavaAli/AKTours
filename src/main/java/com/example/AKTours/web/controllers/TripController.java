@@ -1,6 +1,5 @@
 package com.example.AKTours.web.controllers;
 
-import com.example.AKTours.model.dto.TripDTO;
 import com.example.AKTours.model.entity.Trip;
 import com.example.AKTours.web.exceptions.EntityNotFoundException;
 import com.example.AKTours.web.service.TripService;
@@ -8,7 +7,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import lombok.NoArgsConstructor;
 import io.swagger.annotations.Api;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;

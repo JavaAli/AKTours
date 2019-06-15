@@ -1,5 +1,7 @@
 package com.example.AKTours.web.service;
 
+import com.example.AKTours.model.entity.City;
+import com.example.AKTours.model.entity.Continent;
 import com.example.AKTours.model.entity.Country;
 import com.example.AKTours.repository.CountryRepository;
 import org.junit.Before;
@@ -10,7 +12,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,15 +25,17 @@ public class CountryServiceTest {
     private Country countryOne;
     private Country countryTwo;
     List<Country> countries;
+    private Continent continent;
 
     @MockBean
     private CountryRepository countryRepository;
 
     @Before
     public void setUp() throws Exception {
+        continent=new Continent("Middle America");
         countryService = new CountryService(countryRepository);
-        countryOne = new Country(1L, "Panama", null);
-        countryTwo = new Country(2L, "Costa Rica", null);
+        countryOne = new Country("Panama",continent);
+        countryTwo = new Country( "Costa Rica",continent);
         countries = new ArrayList<>();
         countries.add(countryOne);
         countries.add(countryTwo);
@@ -48,6 +54,6 @@ public class CountryServiceTest {
     public void findByCountryName() {
         Mockito.when(countryRepository.findCountryByName(Mockito.anyString())).thenReturn(countryTwo);
         Country resultCountry = countryService.findByCountryName("Something");
-        assertThat(resultCountry.getId()).isEqualTo(2L);
+        assertThat(resultCountry.getName()).isEqualTo("Costa Rica");
     }
 }

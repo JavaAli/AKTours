@@ -1,14 +1,19 @@
 package com.example.AKTours.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonValue;
+
 import lombok.*;
+
+
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
+;
+
 import java.time.LocalDate;
+;
+
+
 @ToString
 @Builder
 @Entity
@@ -16,23 +21,29 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Embeddable
 public class Trip implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+
     @Column(name = "depart_date")
+
     private LocalDate DepartureDate;
 
+
     @Column(name = "return_date")
+
     private LocalDate ReturnDate;
 
     @Column(name = "number_days")
     private int numberOfDays;
 
     @Column(name = "board_type")
-    private Enum<BoardType> boardType;
+    private String boardType;
 
     @Column(name = "adult_price")
     private BigDecimal adultPrice;
@@ -45,6 +56,7 @@ public class Trip implements Serializable {
 
     @Column(name = "adult_vacancy")
     private int adultVacancy;
+
     @Column(name = "children_vacancy")
     private int childrenVacancy;
 

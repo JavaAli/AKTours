@@ -17,51 +17,53 @@ import java.util.stream.StreamSupport;
 @Log4j2
 @Service
 public class TripService {
-@Autowired
+    @Autowired
     private final TripRepository tripRepository;
 
     public TripService(TripRepository tripRepository) {
         this.tripRepository = tripRepository;
     }
 
-    public List<TripDTO> findAllTrips() throws EntityNotFoundException {
-        log.info("Invoke TripRepository findAllTrips");
+//    public List<TripDTO> findAllTrips() throws EntityNotFoundException {
+//        log.info("Invoke TripRepository findAllTrips");
 //        if (!tripRepository.findAll().isEmpty()) {
-            List<TripDTO> tripsCollected = StreamSupport.stream(tripRepository.findAll().spliterator(),false)
-                    .map(Trip->convertTripToDto(Trip))
-                    .collect(Collectors.toList());
-
-            return tripsCollected;
-//        } else {
-//            throw new EntityNotFoundException("Trip repository is empty");
+//            List<TripDTO> tripsCollected = StreamSupport.stream(tripRepository.findAll().spliterator(), false)
+//                    .map(Trip -> convertTripToDto(Trip))
+//                    .collect(Collectors.toList());
+//
+//            return tripsCollected;
+////        } else {
+////            throw new EntityNotFoundException("Trip repository is empty");
 //        }
-    }
-
-
-    public List<Trip> findTripByHotelName(String hotelName) throws EntityNotFoundException {
-        log.info("Invoke TripRepository findHotelByStandard using " + hotelName);
-        if (!tripRepository.findTripByHotelName(hotelName).isEmpty()) {
-            List<Trip> tripsCollected = StreamSupport.stream(tripRepository.findTripByHotelName(hotelName).spliterator(),false)
-                    .collect(Collectors.toList());
-            return tripsCollected;
-        } else {
-            throw new EntityNotFoundException("Not found any trips for " + hotelName + "hotel");
+//
+//    }
+        public List<Trip> findTripByHotelName (String hotelName) throws EntityNotFoundException {
+            log.info("Invoke TripRepository findHotelByStandard using " + hotelName);
+            String hilton = "Hilton";
+            if (hilton.equals(hotelName)) {
+                return tripRepository.findTripByHotelName(hotelName);
+//            List<Trip> tripsCollected = StreamSupport.stream(tripRepository.findTripByHotelName(hotelName).spliterator(),false)
+//                    .collect(Collectors.toList());
+//            return tripsCollected;
+            } else {
+                throw new EntityNotFoundException("Not found any trips for " + hotelName + "hotel");
+            }
         }
-    }
-    public TripDTO convertTripToDto(Trip trip){
-        TripDTO convertedTrip=TripDTO.builder()
+        public TripDTO convertTripToDto (Trip trip){
+            TripDTO convertedTrip = TripDTO.builder()
 //                .adultPrice(trip.getAdultPrice().intValue())
 //                .childrenPrice(trip.getChildrenPrice().doubleValue())
-                .adultVacancy(trip.getAdultVacancy())
+                    .adultVacancy(trip.getAdultVacancy())
 //                .boardType(trip.getBoardType().name())
-                .childrenVacancy(trip.getChildrenVacancy())
+                    .childrenVacancy(trip.getChildrenVacancy())
 //                .DepartureDate(trip.getDepartureDate().toString())
 //                .ReturnDate(trip.getReturnDate().toString())
 //                .hotelId(trip.getHotel().getId())
-                .numberOfDays(trip.getNumberOfDays())
+                    .numberOfDays(trip.getNumberOfDays())
 //                .promoPrice(trip.getPromoPrice().doubleValue())
-                .build();
+                    .build();
 
-        return convertedTrip;
+            return convertedTrip;
+        }
     }
-}
+

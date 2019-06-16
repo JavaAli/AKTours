@@ -18,7 +18,7 @@ import java.util.List;
 
 @Log4j2
 @Controller
-@RequestMapping(value = {"/", "/airports"})
+@RequestMapping(value = {"/airports"})
 public class AirportController {
 
     private final AirportService airportService;

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.Set;
 
-@JsonIgnoreProperties({"cities"})
+@JsonIgnoreProperties({"cities","continent"})
 @Entity
 @Table(name = "Countries")
 @Data
@@ -28,7 +28,7 @@ public class Country {
     @JoinColumn(name = "country_id")
     private Set<City> cities;
 
-    @ManyToOne(fetch=FetchType.EAGER)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "continent_id")
     private Continent continent;
 

@@ -56,4 +56,11 @@ public class CountryServiceTest {
         Country resultCountry = countryService.findByCountryName("Something");
         assertThat(resultCountry.getName()).isEqualTo("Costa Rica");
     }
+    @Test
+    public void findCountryByContinentName() {
+        Mockito.when(countryRepository.findCountryByContinent_Name(Mockito.anyString())).thenReturn(countries);
+        List<Country> resultCountry = countryService.findCountryByContinentName("Something");
+        assertThat(resultCountry.get(0).getName()).isEqualTo("Panama");
+        assertThat(resultCountry.size()).isEqualTo(2);
+    }
 }

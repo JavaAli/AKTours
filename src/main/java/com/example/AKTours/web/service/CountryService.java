@@ -29,8 +29,14 @@ public class CountryService {
     }
 
     public Country findByCountryName(String name) {
-        log.info("Invoke CountryRepository findByCounryName using " + name);
+        log.info("Invoke CountryRepository findByCountryName using " + name);
 
         return countryRepository.findCountryByName(name);
+    }
+    public List<Country> findCountryByContinentName(String name){
+        log.info("Invoke CountryRepository findCountryByContinent_name using " + name);
+        return StreamSupport
+                .stream(countryRepository.findCountryByContinent_Name(name).spliterator(), false)
+                .collect(Collectors.toList());
     }
 }

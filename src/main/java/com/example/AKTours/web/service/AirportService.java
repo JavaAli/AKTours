@@ -39,7 +39,7 @@ public class AirportService {
 
         String paris = "Paris";
         String katowice = "Katowice";
-        String londyn = "Londyn";
+        String londyn = "London";
 
         if (londyn.equals(name)) {
             return airportRepository.findAirportsInLondon(name);

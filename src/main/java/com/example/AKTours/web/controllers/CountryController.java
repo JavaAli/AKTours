@@ -1,7 +1,10 @@
 package com.example.AKTours.web.controllers;
 
+import com.example.AKTours.model.entity.Country;
+import com.example.AKTours.model.entity.Trip;
+import com.example.AKTours.web.exceptions.EntityNotFoundException;
 import com.example.AKTours.web.service.CountryService;
-import io.swagger.annotations.Api;
+import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -23,17 +26,18 @@ public class CountryController {
         this.countryService = countryService;
     }
 
+    @ApiOperation(value = "Displays all countries ", response = Country.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully found countries")})
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<Object> countiesAll(Model model) {
+    public ResponseEntity<Object> countiesAll() {
         return new ResponseEntity<>(countryService.findAll(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/show/{name}", method = RequestMethod.GET)
-    public String reviews1(Model model, @PathVariable String name) throws Exception {
-
-        Model country = model.addAttribute("oneCountry", countryService.findByCountryName(name));
-
-        return "oneCountry";
-
+    public ResponseEntity<Object> countryByName(
+            @ApiParam(value = "Name of the country", required = true)
+            @PathVariable String name) {
+        return new ResponseEntity<>(countryService.findByCountryName(name),HttpStatus.OK);
     }
 }

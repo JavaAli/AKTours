@@ -3,13 +3,14 @@ package com.example.AKTours.web.service;
 import com.example.AKTours.model.entity.Country;
 import com.example.AKTours.model.entity.Hotel;
 import com.example.AKTours.repository.CountryRepository;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-
+@Log4j2
 @Service
 public class CountryService {
 
@@ -28,6 +29,8 @@ public class CountryService {
     }
 
     public Country findByCountryName(String name) {
+        log.info("Invoke CountryRepository findByCounryName using " + name);
+
         return countryRepository.findCountryByName(name);
     }
 }

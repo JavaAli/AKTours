@@ -28,7 +28,7 @@ public class ContinentController {
         this.continentService = continentService;
     }
 
-    @ApiOperation(value = "Shows all continents", response = List.class)
+    @ApiOperation(value = "Shows all continents", response = Continent.class)
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<Object> continents() {
         return new ResponseEntity<>(continentService.findAll(), HttpStatus.OK);

@@ -34,11 +34,10 @@ public class HotelController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieved list of hotels of given standard")})
     @RequestMapping(value = "/show/{standard}", method = RequestMethod.GET)
-    public ResponseEntity<List> hotelStandard(Model model,
+    public ResponseEntity<List> hotelStandard(
                                 @ApiParam(value = "Number of stars", required = true)
                                 @PathVariable("standard") String standard) throws EntityNotFoundException {
         log.info("Invoke findHotelByStandard method");
-//        Model hotels2 = model.addAttribute("standardHotel", hotelService.findHotelByStandard(standard));
         return new ResponseEntity<>(hotelService.findHotelByStandard(standard), HttpStatus.OK);
     }
 

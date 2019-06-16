@@ -38,15 +38,26 @@ public class TripController {
 
     }
 
-    @ApiOperation(value = "Displays trips by hotel name", response = List.class)
+    @ApiOperation(value = "Displays trips by hotel name", response = Trip.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully found trips")})
     @RequestMapping(value = "/tripsByHotel/{name}", method = RequestMethod.GET)
-    public ResponseEntity<List> findTripsByHotelName(Model model,
+    public ResponseEntity<List> findTripsByHotelName(
                                            @ApiParam(value = "Name of the hotel", required = true)
                                            @PathVariable("name") String name) throws EntityNotFoundException {
         log.info("Invoke findTripsByHotelName method");
-        return new ResponseEntity<>(tripService.findTripByHotelName(name), HttpStatus.OK);
+        return new ResponseEntity<>(tripService.findTripByHotelNameNew(name), HttpStatus.OK);
+
+    }
+    @ApiOperation(value = "Displays trips by city name", response = Trip.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully found trips")})
+    @RequestMapping(value = "/tripsByCity/{name}", method = RequestMethod.GET)
+    public ResponseEntity<List> findTripsByCityName(
+            @ApiParam(value = "Name of the city", required = true)
+            @PathVariable("name") String name) throws EntityNotFoundException {
+        log.info("Invoke findTripsByCityName method");
+        return new ResponseEntity<>(tripService.findTripByCityName(name), HttpStatus.OK);
 
     }
 }

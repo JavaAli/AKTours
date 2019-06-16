@@ -11,6 +11,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -67,8 +68,9 @@ public class TripServiceTest {
     }
     @Test
     public void findTripByHotelName() throws EntityNotFoundException {
-        Mockito.when(tripRepository.findTripByHilton("Hilton")).thenReturn(trips);
-        List<Trip> result = tripService.findTripByHotelName("Hilton");
+        Mockito.when(tripRepository.findTripsByHotelName(Mockito.anyString())).thenReturn(trips);
+        List<Trip> result = tripService.findTripByHotelNameNew("Hilton");
+        assertThat(result.size()).isEqualTo(1);
     }
 
 }

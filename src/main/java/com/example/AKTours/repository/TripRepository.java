@@ -12,5 +12,14 @@ import java.util.List;
 public interface TripRepository extends JpaRepository<Trip, Long> {
 
     @Query(value = "SELECT id, depart_date, return_date, adult_price, adult_vacancy, board_type, children_price, children_vacancy, number_days, promo_price, home_airport_id_pk, destin_airport_id_pk, hotel_id_pk from trips where hotel_id_pk = 1", nativeQuery = true)
-    List<Trip> findTripByHotelName(String name);
+    List<Trip> findTripByHilton(String name);
+
+    @Query(value = "SELECT id, depart_date, return_date, adult_price, adult_vacancy, board_type, children_price, children_vacancy, number_days, promo_price, home_airport_id_pk, destin_airport_id_pk, hotel_id_pk from trips where hotel_id_pk = 3", nativeQuery = true)
+    List<Trip> findTripByMariott(String name);
+
+    @Query(value = "SELECT id, depart_date, return_date, adult_price, adult_vacancy, board_type, children_price, children_vacancy, number_days, promo_price, home_airport_id_pk, destin_airport_id_pk, hotel_id_pk from trips where hotel_id_pk = 2", nativeQuery = true)
+    List<Trip> findTripByZacisze(String name);
+
+    @Query(value = "SELECT id, depart_date, return_date, adult_price, adult_vacancy, board_type, children_price, children_vacancy, number_days, promo_price, home_airport_id_pk, destin_airport_id_pk, hotel_id_pk from trips where hotel_id_pk = 4", nativeQuery = true)
+    List<Trip> findTripByLeCorbusiere(String name);
 }

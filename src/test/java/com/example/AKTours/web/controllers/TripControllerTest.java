@@ -60,4 +60,15 @@ public class TripControllerTest {
                 .andExpect(jsonPath("$[0].boardType",  new StringContains("BB")));
     }
 
+    @Test
+    public void findTripByHotel() throws Exception {
+
+
+        Mockito.when(tripService.findTripByHotelName("Hilton")).thenReturn(trips);
+        mockMvc.perform(get("/tripsByHotel/Hilton"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$[0].boardType",  new StringContains("BB")));
+    }
+
 }

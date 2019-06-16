@@ -66,7 +66,9 @@ public class TripServiceTest {
         List<Trip> result = tripService.findAllTrips();
     }
     @Test
-    public void findTripByHotelName() {
+    public void findTripByHotelName() throws EntityNotFoundException {
+        Mockito.when(tripRepository.findTripByHilton("Hilton")).thenReturn(trips);
+        List<Trip> result = tripService.findTripByHotelName("Hilton");
     }
 
 }

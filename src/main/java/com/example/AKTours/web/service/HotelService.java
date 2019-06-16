@@ -2,11 +2,11 @@ package com.example.AKTours.web.service;
 
 import com.example.AKTours.model.entity.Hotel;
 import com.example.AKTours.repository.HotelRepository;
+import com.example.AKTours.web.exceptions.EntityNotFoundException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -29,16 +29,27 @@ public class HotelService {
         return collect;
     }
 
-    public List<Hotel> findHotelByStandard(String standard) {
-        log.info("Invoke Hotel Repository findHotelByStandard using "+standard);
-        List<Hotel> collect = StreamSupport.stream(hotelRepository.findHotelByStandard(standard).spliterator(), false)
-                .collect(Collectors.toList());
-        return collect;
+    public List<Hotel> findHotelByStandard(String standard) throws EntityNotFoundException {
+        log.info("Invoke Hotel Repository findHotelByStandard using " + standard);
+        if (!hotelRepository.findHotelByStandard(standard).isEmpty()) {
+            List<Hotel> hotelCollected = StreamSupport.stream(hotelRepository.findHotelByStandard(standard).spliterator(), false)
+                    .collect(Collectors.toList());
+            return hotelCollected;
+        } else {
+            throw new EntityNotFoundException("Not found any hotel with " + standard + "standard");
+        }
     }
 
-    public Hotel findByHotelName(String name) {
-        log.info("Invoke hotel repostory findByHotelName using "+name);
-        return hotelRepository.findHotelByName(name);
+    public List<Hotel> findByHotelName(String name) throws EntityNotFoundException {
+        log.info("Invoke hotel repository findByHotelName using " + name);
+        if (!hotelRepository.findHotelByName(name).isEmpty()) {
+            List<Hotel> hotels = StreamSupport.stream(hotelRepository.findHotelByName(name)
+                    .spliterator(), false)
+                    .collect(Collectors.toList());
+            return hotels;
+        } else {
+            throw new EntityNotFoundException("Not found any hotel with name: " + name);
+        }
     }
 
     public List<Hotel> findHotelByCityName(String name) {

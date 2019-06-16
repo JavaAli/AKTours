@@ -1,20 +1,18 @@
 package com.example.AKTours.repository;
 
-
 import com.example.AKTours.model.entity.Hotel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface HotelRepository extends CrudRepository<Hotel, Long>, JpaRepository<Hotel, Long> {
+public interface HotelRepository extends JpaRepository<Hotel, Long> {
 
-     List<Hotel> findHotelByStandard(String standard);
+    public List<Hotel> findHotelByStandard(String standard);
 
-     Hotel findHotelByName(String name);
+    public List<Hotel> findHotelByName(String name);
 
     @Query(value = "SELECT id,hotel_name,description,standard from hotels where city_id = 1", nativeQuery = true)
     List<Hotel> findHotelsInLondon(String name);

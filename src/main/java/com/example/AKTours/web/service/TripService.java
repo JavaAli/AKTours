@@ -33,25 +33,6 @@ public class TripService {
     }
 
     public List<Trip> findTripByHotelName(String hotelName) throws EntityNotFoundException {
-        log.info("Invoke TripRepository findHotelByStandard using " + hotelName);
-        String hilton = "Hilton";
-        String mariott = "Mariott";
-        String zacisze = "Zacisze";
-        String lecorbusiere = "LeCorbusiere";
-        if (hilton.equals(hotelName)) {
-            return tripRepository.findTripByHilton(hotelName);
-        } else if (mariott.equals(hotelName)) {
-            return tripRepository.findTripByMariott(hotelName);
-        } else if (zacisze.equals(hotelName)) {
-            return tripRepository.findTripByZacisze(hotelName);
-        } else if (lecorbusiere.equals(hotelName)) {
-            return tripRepository.findTripByLeCorbusiere(hotelName);
-        } else {
-            throw new EntityNotFoundException("Not found any trips for " + hotelName + "hotel");
-        }
-    }
-
-    public List<Trip> findTripByHotelNameNew(String hotelName) throws EntityNotFoundException {
         log.info("Invoke TripRepository findTripByHotelName using " + hotelName);
         if (!tripRepository.findTripsByHotelName(hotelName).isEmpty()) {
             List<Trip> tripsCollected = StreamSupport
@@ -71,6 +52,28 @@ public class TripService {
             return tripsCollected;
         } else {
             throw new EntityNotFoundException("Not found any trips for city " + cityName);
+        }
+    }
+    public List<Trip> findTripByCountryName(String name) throws EntityNotFoundException {
+        log.info("Invoke TripRepository findTripByCountryName using " + name);
+        if (!tripRepository.findTripsByCountryName(name).isEmpty()) {
+            List<Trip> tripsCollected = StreamSupport
+                    .stream(tripRepository.findTripsByCountryName(name).spliterator(), false)
+                    .collect(Collectors.toList());
+            return tripsCollected;
+        } else {
+            throw new EntityNotFoundException("Not found any trips for country " + name);
+        }
+    }
+    public List<Trip> findTripByContinentName(String name) throws EntityNotFoundException {
+        log.info("Invoke TripRepository findTripByContinentName using " + name);
+        if (!tripRepository.findTripsByContinentName(name).isEmpty()) {
+            List<Trip> tripsCollected = StreamSupport
+                    .stream(tripRepository.findTripsByContinentName(name).spliterator(), false)
+                    .collect(Collectors.toList());
+            return tripsCollected;
+        } else {
+            throw new EntityNotFoundException("Not found any trips for continent " + name);
         }
     }
 }

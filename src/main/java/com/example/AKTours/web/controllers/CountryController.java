@@ -33,11 +33,18 @@ public class CountryController {
     public ResponseEntity<Object> countiesAll() {
         return new ResponseEntity<>(countryService.findAll(), HttpStatus.OK);
     }
-
+    @ApiOperation(value = "Find countries by its name", response = Country.class)
     @RequestMapping(value = "/show/{name}", method = RequestMethod.GET)
     public ResponseEntity<Object> countryByName(
             @ApiParam(value = "Name of the country", required = true)
             @PathVariable String name) {
         return new ResponseEntity<>(countryService.findByCountryName(name),HttpStatus.OK);
+    }
+    @ApiOperation(value = "Find countries by Continent name", response = Country.class)
+    @RequestMapping(value = "/byContinent/{name}", method = RequestMethod.GET)
+    public ResponseEntity<Object> countryByContinentName(
+            @ApiParam(value = "Name of the continent", required = true)
+            @PathVariable String name) {
+        return new ResponseEntity<>(countryService.findCountryByContinentName(name),HttpStatus.OK);
     }
 }

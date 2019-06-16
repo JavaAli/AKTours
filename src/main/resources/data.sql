@@ -5,15 +5,15 @@ DELETE FROM cities;
 DELETE FROM countries;
 DELETE FROM continents;
 
-insert into continents(continent_id,continent_name)values ('1','Europa');
+insert into continents(continent_id,continent_name)values ('1','Europe');
 insert into continents(continent_id,continent_name)values ('2','Asia');
 insert into continents(continent_id,continent_name)values ('3','Africa');
 insert into countries  (id, country_name,continent_id)values (1,'Poland',1);
 insert into countries  (id, country_name,continent_id)values (2,'France',1);
-insert into countries  (id, country_name,continent_id)values (3,'Great Britan',1);
+insert into countries  (id, country_name,continent_id)values (3,'Great Britain',1);
 insert into countries  (id, country_name,continent_id)values (4,'Iran',2);
 insert into countries  (id, country_name,continent_id)values (5,'Czad',3);
-insert into cities  (id, city_name,country_id)values (1,'Londyn',3);
+insert into cities  (id, city_name,country_id)values (1,'London',3);
 insert into cities  (id, city_name,country_id)values (2,'Paris',2);
 insert into cities  (id, city_name,country_id)values (3,'Wachock',1);
 insert into cities  (id, city_name,country_id)values (4,'Teheran',4);

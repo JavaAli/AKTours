@@ -108,7 +108,7 @@ public class TripServiceTest {
 
     @Test
     public void   findTripsByDepartureDateAndReturnDateBetween()throws EntityNotFoundException{
-        Mockito.when(tripRepository.findAllByDepartureDateGreaterThanEqualAndReturnDateIsLessThanEqual(Mockito.any(LocalDate.class))).thenReturn(trips);
+        Mockito.when(tripRepository.findTripByDate(Mockito.any(LocalDate.class))).thenReturn(trips);
         List<Trip> result = tripService.findTripByDate(LocalDate.of(2019,6,1));
         assertThat(result.size()).isEqualTo(1);
     }

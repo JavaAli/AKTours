@@ -85,9 +85,9 @@ public class TripService {
     }
 
     public List<Trip> findTripByDate(LocalDate date) throws EntityNotFoundException {
-        if (!tripRepository.findAllByDepartureDateGreaterThanEqualAndReturnDateIsLessThanEqual(date).isEmpty()) {
+        if (!tripRepository.findTripByDate(date).isEmpty()) {
             List<Trip> tripsCollected = StreamSupport
-                    .stream(tripRepository.findAllByDepartureDateGreaterThanEqualAndReturnDateIsLessThanEqual(date).spliterator(), false)
+                    .stream(tripRepository.findTripByDate(date).spliterator(), false)
                     .collect(Collectors.toList());
             return tripsCollected;
         } else {

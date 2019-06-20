@@ -67,8 +67,42 @@ public class TripServiceTest {
     }
     @Test
     public void findTripByHotelName() throws EntityNotFoundException {
-        Mockito.when(tripRepository.findTripByHilton("Hilton")).thenReturn(trips);
+        Mockito.when(tripRepository.findTripsByHotelName(Mockito.anyString())).thenReturn(trips);
         List<Trip> result = tripService.findTripByHotelName("Hilton");
+        assertThat(result.size()).isEqualTo(1);
+    }
+    @Test
+    public void findTripByCityName() throws EntityNotFoundException {
+        Mockito.when(tripRepository.findTripsByCityName(Mockito.anyString())).thenReturn(trips);
+        List<Trip> result = tripService.findTripByCityName("Paris");
+        assertThat(result.size()).isEqualTo(1);
+    }
+    @Test(expected = EntityNotFoundException.class)
+    public void findEmptyListForCities() throws EntityNotFoundException {
+        Mockito.when(tripRepository.findTripsByCityName(Mockito.anyString())).thenReturn(new ArrayList<>());
+        List<Trip> result = tripService.findTripByCityName("blebla");
     }
 
+    @Test
+    public void findTripByCountryName() throws EntityNotFoundException {
+        Mockito.when(tripRepository.findTripsByCountryName(Mockito.anyString())).thenReturn(trips);
+        List<Trip> result = tripService.findTripByCountryName("Poland");
+        assertThat(result.size()).isEqualTo(1);
+    }
+    @Test(expected = EntityNotFoundException.class)
+    public void findEmptyListForCountries() throws EntityNotFoundException {
+        Mockito.when(tripRepository.findTripsByCountryName(Mockito.anyString())).thenReturn(new ArrayList<>());
+        List<Trip> result = tripService.findTripByCountryName("Namibia");
+    }
+    @Test
+    public void findTripByContinentName() throws EntityNotFoundException {
+        Mockito.when(tripRepository.findTripsByContinentName(Mockito.anyString())).thenReturn(trips);
+        List<Trip> result = tripService.findTripByContinentName("Europe");
+        assertThat(result.size()).isEqualTo(1);
+    }
+    @Test(expected = EntityNotFoundException.class)
+    public void findEmptyListForContinents() throws EntityNotFoundException {
+        Mockito.when(tripRepository.findTripsByContinentName(Mockito.anyString())).thenReturn(new ArrayList<>());
+        List<Trip> result = tripService.findTripByContinentName("Australia");
+    }
 }

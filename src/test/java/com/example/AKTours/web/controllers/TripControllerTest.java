@@ -62,13 +62,34 @@ public class TripControllerTest {
 
     @Test
     public void findTripByHotel() throws Exception {
-
-
         Mockito.when(tripService.findTripByHotelName("Hilton")).thenReturn(trips);
         mockMvc.perform(get("/tripsByHotel/Hilton"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$[0].boardType",  new StringContains("BB")));
     }
-
+    @Test
+    public void findTripByCity() throws Exception {
+        Mockito.when(tripService.findTripByCityName("London")).thenReturn(trips);
+        mockMvc.perform(get("/tripsByCity/London"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$[0].boardType",  new StringContains("BB")));
+    }
+    @Test
+    public void findTripByCountry() throws Exception {
+        Mockito.when(tripService.findTripByCountryName("Poland")).thenReturn(trips);
+        mockMvc.perform(get("/tripsByCountry/Poland"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$[0].boardType",  new StringContains("BB")));
+    }
+    @Test
+    public void findTripByContinent() throws Exception {
+        Mockito.when(tripService.findTripByContinentName("Europe")).thenReturn(trips);
+        mockMvc.perform(get("/tripsByContinent/Europe"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$[0].boardType",  new StringContains("BB")));
+    }
 }

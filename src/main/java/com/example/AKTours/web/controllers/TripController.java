@@ -67,8 +67,12 @@ public class TripController {
             @ApiParam(value = "Name of the country", required = true)
             @PathVariable("name") String name) throws EntityNotFoundException {
         log.info("Invoke findTripsByCountryName method");
+        if(name.equals("Select")){
+            return new ResponseEntity<>(tripService.findAllTrips(),HttpStatus.OK);
+        }else{
         return new ResponseEntity<>(tripService.findTripByCountryName(name), HttpStatus.OK);
-    }
+    }}
+
     @ApiOperation(value = "Displays trips by continent name", response = Trip.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully found trips")})
@@ -77,6 +81,9 @@ public class TripController {
             @ApiParam(value = "Name of the continent", required = true)
             @PathVariable("name") String name) throws EntityNotFoundException {
         log.info("Invoke findTripsByContinentName method");
+        if(name.equals("Select")){
+            return new ResponseEntity<>(tripService.findAllTrips(),HttpStatus.OK);
+        }else{
         return new ResponseEntity<>(tripService.findTripByContinentName(name), HttpStatus.OK);
-    }
+    }}
 }

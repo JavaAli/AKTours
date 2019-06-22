@@ -9,7 +9,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-@JsonIgnoreProperties({"hotel"})
+//@JsonIgnoreProperties({"hotel"})
 @ToString
 @Builder
 @Entity
@@ -27,6 +27,7 @@ public class Trip implements Serializable {
 
     @Column(name = "depart_date")
     private LocalDate DepartureDate;
+
 
     @Column(name = "return_date")
     private LocalDate ReturnDate;

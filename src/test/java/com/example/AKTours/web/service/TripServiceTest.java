@@ -105,4 +105,19 @@ public class TripServiceTest {
         Mockito.when(tripRepository.findTripsByContinentName(Mockito.anyString())).thenReturn(new ArrayList<>());
         List<Trip> result = tripService.findTripByContinentName("Australia");
     }
+
+    @Test
+    public void   findTripsByDepartureDateAndReturnDateBetween()throws EntityNotFoundException{
+        Mockito.when(tripRepository.findTripByDate(Mockito.any(LocalDate.class))).thenReturn(trips);
+        List<Trip> result = tripService.findTripByDate(LocalDate.of(2019,6,1));
+        assertThat(result.size()).isEqualTo(1);
+    }
+
+    @Test
+
+    public void   findAllByAdultPriceLessThanEqual() throws EntityNotFoundException{
+        Mockito.when(tripRepository.findAllByAdultPriceLessThanEqual(Mockito.any(BigDecimal.class))).thenReturn(trips);
+        List<Trip> result = tripService.findTripByPrice(BigDecimal.valueOf(900));
+        assertThat(result.size()).isEqualTo(1);
+    }
 }

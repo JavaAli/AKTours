@@ -9,11 +9,13 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Api;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Log4j2
@@ -81,9 +83,35 @@ public class TripController {
             @ApiParam(value = "Name of the continent", required = true)
             @PathVariable("name") String name) throws EntityNotFoundException {
         log.info("Invoke findTripsByContinentName method");
-        if(name.equals("Select")){
-            return new ResponseEntity<>(tripService.findAllTrips(),HttpStatus.OK);
-        }else{
-        return new ResponseEntity<>(tripService.findTripByContinentName(name), HttpStatus.OK);
-    }}
-}
+        if (name.equals("Select")) {
+            return new ResponseEntity<>(tripService.findAllTrips(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(tripService.findTripByContinentName(name), HttpStatus.OK);
+        }
+    }
+
+        @ApiOperation(value = "Displays trips by date", response = Trip.class)
+        @ApiResponses(value = {
+                @ApiResponse(code = 200, message = "Successfully found trips")})
+        @RequestMapping(value = "/tripsByDate/{date}", method = RequestMethod.GET)
+        public ResponseEntity<List> findTripsByContinentName (
+                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                @ApiParam(value = "Date of the trip", required = true)
+                @PathVariable("date") LocalDate date) throws EntityNotFoundException {
+            log.info("Invoke findTripsByContinentName method");
+            return new ResponseEntity<>(tripService.findTripByDate(date), HttpStatus.OK);
+        }
+
+
+    @ApiOperation(value = "Displays trips by price", response = Trip.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully found trips")})
+    @RequestMapping(value = "/tripsByPrice/{price}", method = RequestMethod.GET)
+    public ResponseEntity<List> findTripsByContinentName(
+            @ApiParam(value = "Price of the trip", required = true)
+            @PathVariable("price")BigDecimal price) throws EntityNotFoundException {
+        log.info("Invoke findTripsByContinentName method");
+        return new ResponseEntity<>(tripService.findTripByPrice(price), HttpStatus.OK);
+    }
+    }
+

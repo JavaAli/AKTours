@@ -5,9 +5,11 @@ import com.example.AKTours.model.entity.Continent;
 import com.example.AKTours.model.entity.Country;
 import com.example.AKTours.repository.CityRepository;
 import com.example.AKTours.web.exceptions.EntityNotFoundException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,15 +57,22 @@ public class CityServiceTest {
 
     @Test
     public void findCityByName() throws EntityNotFoundException {
-        Mockito.when(cityRepository.findCityByName(Mockito.anyString())).thenReturn(Optional.ofNullable(cityOne));
-        Optional<City> resultCity = cityService.findCityByName("SomeName");
-        assertThat(resultCity.get().getName()).isEqualTo("Panama");
+        Mockito.when(cityRepository.findCityByName(Mockito.anyString())).thenReturn(cityOne);
+        City resultCity = cityService.findCityByName("SomeName");
+        assertThat(resultCity.getName()).isEqualTo("Panama");
     }
 
     @Test
     public void findCityByContinentName() throws EntityNotFoundException {
         Mockito.when(cityRepository.findCitiesByContinentName(Mockito.anyString())).thenReturn(cities);
         List<City> resultCity = cityService.findCityByContinentName("Something");
+        assertThat(resultCity.get(0).getName()).isEqualTo("Panama");
+        assertThat(resultCity.size()).isEqualTo(2);
+    }
+    @Test
+    public void findCityByCountryName() throws EntityNotFoundException {
+        Mockito.when(cityRepository.findCitiesByCountryName(Mockito.anyString())).thenReturn(cities);
+        List<City> resultCity = cityService.findCityByCountryName("Something");
         assertThat(resultCity.get(0).getName()).isEqualTo("Panama");
         assertThat(resultCity.size()).isEqualTo(2);
     }

@@ -44,12 +44,13 @@ public class TripController {
             @ApiResponse(code = 200, message = "Successfully found trips")})
     @RequestMapping(value = "/tripsByHotel/{name}", method = RequestMethod.GET)
     public ResponseEntity<List> findTripsByHotelName(
-                                           @ApiParam(value = "Name of the hotel", required = true)
-                                           @PathVariable("name") String name) throws EntityNotFoundException {
+            @ApiParam(value = "Name of the hotel", required = true)
+            @PathVariable("name") String name) throws EntityNotFoundException {
         log.info("Invoke findTripsByHotelName method");
         return new ResponseEntity<>(tripService.findTripByHotelName(name), HttpStatus.OK);
 
     }
+
     @ApiOperation(value = "Displays trips by city name", response = Trip.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully found trips")})
@@ -58,8 +59,13 @@ public class TripController {
             @ApiParam(value = "Name of the city", required = true)
             @PathVariable("name") String name) throws EntityNotFoundException {
         log.info("Invoke findTripsByCityName method");
-        return new ResponseEntity<>(tripService.findTripByCityName(name), HttpStatus.OK);
+        if (name.equals("Select")) {
+            return new ResponseEntity<>(tripService.findAllTrips(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(tripService.findTripByCityName(name), HttpStatus.OK);
+        }
     }
+
     @ApiOperation(value = "Displays trips by country name", response = Trip.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully found trips")})
@@ -68,11 +74,12 @@ public class TripController {
             @ApiParam(value = "Name of the country", required = true)
             @PathVariable("name") String name) throws EntityNotFoundException {
         log.info("Invoke findTripsByCountryName method");
-        if(name.equals("Select")){
-            return new ResponseEntity<>(tripService.findAllTrips(),HttpStatus.OK);
-        }else{
-        return new ResponseEntity<>(tripService.findTripByCountryName(name), HttpStatus.OK);
-    }}
+        if (name.equals("Select")) {
+            return new ResponseEntity<>(tripService.findAllTrips(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(tripService.findTripByCountryName(name), HttpStatus.OK);
+        }
+    }
 
     @ApiOperation(value = "Displays trips by continent name", response = Trip.class)
     @ApiResponses(value = {
@@ -89,17 +96,17 @@ public class TripController {
         }
     }
 
-        @ApiOperation(value = "Displays trips by date", response = Trip.class)
-        @ApiResponses(value = {
-                @ApiResponse(code = 200, message = "Successfully found trips")})
-        @RequestMapping(value = "/tripsByDate/{date}", method = RequestMethod.GET)
-        public ResponseEntity<List> findTripsByContinentName (
-                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-                @ApiParam(value = "Date of the trip", required = true)
-                @PathVariable("date") LocalDate date) throws EntityNotFoundException {
-            log.info("Invoke findTripsByContinentName method");
-            return new ResponseEntity<>(tripService.findTripByDate(date), HttpStatus.OK);
-        }
+    @ApiOperation(value = "Displays trips by date", response = Trip.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully found trips")})
+    @RequestMapping(value = "/tripsByDate/{date}", method = RequestMethod.GET)
+    public ResponseEntity<List> findTripsByContinentName(
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            @ApiParam(value = "Date of the trip", required = true)
+            @PathVariable("date") LocalDate date) throws EntityNotFoundException {
+        log.info("Invoke findTripsByContinentName method");
+        return new ResponseEntity<>(tripService.findTripByDate(date), HttpStatus.OK);
+    }
 
 
     @ApiOperation(value = "Displays trips by price", response = Trip.class)
@@ -108,9 +115,9 @@ public class TripController {
     @RequestMapping(value = "/tripsByPrice/{price}", method = RequestMethod.GET)
     public ResponseEntity<List> findTripsByContinentName(
             @ApiParam(value = "Price of the trip", required = true)
-            @PathVariable("price")BigDecimal price) throws EntityNotFoundException {
+            @PathVariable("price") BigDecimal price) throws EntityNotFoundException {
         log.info("Invoke findTripsByContinentName method");
         return new ResponseEntity<>(tripService.findTripByPrice(price), HttpStatus.OK);
     }
-    }
+}
 

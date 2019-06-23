@@ -29,12 +29,12 @@ public class CityService {
     }
 
     public City findCityByName(String name) {
-        log.info("Invoke CityRepository findCityByName using" + name);
+        log.info("Invoke CityRepository findCityByName using " + name);
         return cityRepository.findCityByName(name);
     }
 
     public List<City> findCityByCountryName(String name) throws EntityNotFoundException {
-        log.info("Invoke CityRepository findCityByCoutryName using" + name);
+        log.info("Invoke CityRepository findCityByCoutryName using " + name);
         if (!cityRepository.findCitiesByCountryName(name).isEmpty()) {
             return cityRepository.findCitiesByCountryName(name);
         } else {
@@ -43,7 +43,7 @@ public class CityService {
     }
 
     public List<City> findCityByContinentName(String name) throws EntityNotFoundException {
-        log.info("Invoke CityRepository findCityByContinentName using" + name);
+        log.info("Invoke CityRepository findCityByContinentName using " + name);
         if (!cityRepository.findCitiesByContinentName(name).isEmpty()) {
             return cityRepository.findCitiesByContinentName(name);
         } else {

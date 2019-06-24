@@ -6,6 +6,7 @@ import com.example.AKTours.web.exceptions.EntityNotFoundException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -31,8 +32,8 @@ public class AirportService {
 
     public Airport findAirportByName(String name) throws EntityNotFoundException {
         log.info("Invoke airport repository fingAirportByName using " + name);
-        Airport airport=airportRepository.findAirportByName(name)
-                .orElseThrow(()->new EntityNotFoundException("Airport with name "+name+"not exist in base"));
+        Airport airport = airportRepository.findAirportByName(name)
+                .orElseThrow(() -> new EntityNotFoundException("Airport with name " + name + "not exist in base"));
         return airport;
     }
 

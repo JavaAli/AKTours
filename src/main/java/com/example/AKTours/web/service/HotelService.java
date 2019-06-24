@@ -59,10 +59,11 @@ public class HotelService {
             return null;
         }
     }
+
     public Hotel findByHotelName(String name) throws EntityNotFoundException {
         log.info("Invoke hotel repository findByHotelName using " + name);
-        Hotel hotel=hotelRepository.findHotelByName(name)
-                .orElseThrow(()->new EntityNotFoundException("Hotel with name "+name+"not exist in base"));
+        Hotel hotel = hotelRepository.findHotelByName(name)
+                .orElseThrow(() -> new EntityNotFoundException("Hotel with name " + name + "not exist in base"));
         return hotel;
     }
 }

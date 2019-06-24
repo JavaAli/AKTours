@@ -1,11 +1,7 @@
 package com.example.AKTours.model.entity;
 
-import com.example.AKTours.web.exceptions.EntityNotFoundException;
-import com.example.AKTours.web.service.AirportService;
-import com.example.AKTours.web.service.HotelService;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -67,7 +63,7 @@ public class Trip implements Serializable {
     private Airport destinAirport;
 
     public Trip(LocalDate departureDate, LocalDate returnDate, int numberOfDays, String boardType, BigDecimal adultPrice,
-                BigDecimal childrenPrice, BigDecimal promoPrice, int adultVacancy, int childrenVacancy ) {
+                BigDecimal childrenPrice, BigDecimal promoPrice, int adultVacancy, int childrenVacancy) {
         DepartureDate = departureDate;
         ReturnDate = returnDate;
         this.numberOfDays = numberOfDays;
@@ -77,10 +73,6 @@ public class Trip implements Serializable {
         this.promoPrice = promoPrice;
         this.adultVacancy = adultVacancy;
         this.childrenVacancy = childrenVacancy;
-
-//        this.homeAirport = homeAirport;
-//        this.destinAirport = destinAirport;, Hotel hotel,
-//                Airport homeAirport, Airport destinAirport
     }
 
     @Override
@@ -103,7 +95,8 @@ public class Trip implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, DepartureDate, ReturnDate, numberOfDays, boardType, adultPrice, childrenPrice, promoPrice, hotel, homeAirport, destinAirport);
+        return Objects.hash(id, DepartureDate, ReturnDate, numberOfDays, boardType, adultPrice, childrenPrice,
+                promoPrice, hotel, homeAirport, destinAirport);
     }
 
     @Override

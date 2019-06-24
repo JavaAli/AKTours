@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
+
 @JsonIgnoreProperties({"tripsDestina", "tripsHome"})
 @Entity
 @Table(name = "Airports")
@@ -20,7 +21,7 @@ public class Airport implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name="airport_name")
+    @Column(name = "airport_name")
     private String name;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -35,11 +36,12 @@ public class Airport implements Serializable {
     @JoinColumn(name = "city_id")
     private City city;
 
-    public void addTripToTripsHome (Trip trip){
-       trip.setHomeAirport(this);
-       this.tripsHome.add(trip);
+    public void addTripToTripsHome(Trip trip) {
+        trip.setHomeAirport(this);
+        this.tripsHome.add(trip);
     }
-    public void addTripToTripsDest (Trip trip){
+
+    public void addTripToTripsDest(Trip trip) {
         trip.setDestinAirport(this);
         this.tripsDestina.add(trip);
     }

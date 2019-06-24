@@ -123,8 +123,8 @@ public class TripService {
         log.info("Invoke convertToTrip method");
         Trip tripToSave = convertTripDtoToTrip(tripDto);
         Hotel hotel = findByHotelName(tripDto.getHotel());
-        Airport homeAirportToSave= findAirportByName(tripDto.getHomeAirport());
-        Airport destAirportToSave= findAirportByName(tripDto.getDestinAirport());
+        Airport homeAirportToSave = findAirportByName(tripDto.getHomeAirport());
+        Airport destAirportToSave = findAirportByName(tripDto.getDestinAirport());
         log.info("add to hotel trip " + tripDto.toString());
         hotel.addTripToHotels(tripToSave);
         log.info("add trip to home Airport");
@@ -149,7 +149,6 @@ public class TripService {
                 .childrenVacancy(tripDto.getChildrenVacancy())
                 .boardType(tripDto.getBoardType())
                 .build();
-
         return trip;
     }
 
@@ -159,10 +158,11 @@ public class TripService {
                 .orElseThrow(() -> new EntityNotFoundException("Hotel with name " + name + "not exist in base"));
         return hotel;
     }
+
     public Airport findAirportByName(String name) throws EntityNotFoundException {
         log.info("Invoke airport repository fingAirportByName using " + name);
-        Airport airport=airportRepository.findAirportByName(name)
-                .orElseThrow(()->new EntityNotFoundException("Airport with name "+name+"not exist in base"));
+        Airport airport = airportRepository.findAirportByName(name)
+                .orElseThrow(() -> new EntityNotFoundException("Airport with name " + name + "not exist in base"));
         return airport;
     }
 }

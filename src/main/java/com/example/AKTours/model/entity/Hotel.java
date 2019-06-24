@@ -12,6 +12,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
+
 @Log4j2
 @JsonIgnoreProperties({"trips"})
 @AllArgsConstructor
@@ -43,7 +44,7 @@ public class Hotel implements Serializable {
     @JoinColumn(name = "city_id")
     private City city;
 
-    public void addTripToHotels(Trip trip){
+    public void addTripToHotels(Trip trip) {
         log.info("setting hotel to new trip");
         trip.setHotel(this);
         log.info("Add new trip to hotel");

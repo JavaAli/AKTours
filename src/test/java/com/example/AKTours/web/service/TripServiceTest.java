@@ -120,4 +120,11 @@ public class TripServiceTest {
         List<Trip> result = tripService.findTripByPrice(BigDecimal.valueOf(900));
         assertThat(result.size()).isEqualTo(1);
     }
+
+    @Test
+    public void addTripWithSuccess(){
+//        Mockito.when(tripRepository.save(Mockito.any())).thenReturn(trip);
+//        Trip result= tripService.addTrip(trip);
+//        assertThat(result).isEqualTo(trip);
+    }
 }

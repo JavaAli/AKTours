@@ -13,7 +13,7 @@ import java.util.Set;
 @Builder
 @Data
 @Entity
-@JsonIgnoreProperties({"hotels", "airports"})
+@JsonIgnoreProperties({"hotels", "airports", "country"})
 @NoArgsConstructor
 @Table(name = "Cities")
 public class City {
@@ -25,11 +25,11 @@ public class City {
     @Column(name = "city_name")
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "city_id")
     private Set<Hotel> hotels;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "city_id")
     private Set<Airport> airports;
 

@@ -6,13 +6,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface HotelRepository extends JpaRepository<Hotel, Long> {
 
     public List<Hotel> findHotelByStandard(String standard);
 
-    public List<Hotel> findHotelByName(String name);
+    public Optional<Hotel> findHotelByName(String name);
 
     @Query(value = "SELECT id,hotel_name,description,standard from hotels where city_id = 1", nativeQuery = true)
     List<Hotel> findHotelsInLondon(String name);

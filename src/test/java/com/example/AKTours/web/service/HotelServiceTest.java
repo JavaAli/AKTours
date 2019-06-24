@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -68,14 +69,14 @@ public class HotelServiceTest {
 
     @Test
     public void findByHotelName() throws EntityNotFoundException {
-        Mockito.when(hotelRepository.findHotelByName(Mockito.anyString())).thenReturn(selectedHotels);
-        List<Hotel> result = hotelService.findByHotelName("Bambino");
-        assertThat(result.get(0).getId()).isEqualTo(2L);
+        Mockito.when(hotelRepository.findHotelByName(Mockito.anyString())).thenReturn(Optional.of(selectedHotels.get(0)));
+        Hotel result = hotelService.findByHotelName("Bambino");
+        assertThat(result.getId()).isEqualTo(2L);
     }
     @Test(expected = EntityNotFoundException.class)
     public void findNonExcistingHotel() throws EntityNotFoundException {
-        Mockito.when(hotelRepository.findHotelByName(Mockito.anyString())).thenReturn(new ArrayList<>());
-        List<Hotel> result = hotelService.findByHotelName("XXX");
+//        Mockito.when(hotelRepository.findHotelByName(Mockito.anyString())).thenReturn();
+        Hotel result = hotelService.findByHotelName("XXX");
     }
 
 }

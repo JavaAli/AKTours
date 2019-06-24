@@ -45,12 +45,11 @@ public class HotelController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully found hotel")})
     @RequestMapping(value = "/name/{name}", method = RequestMethod.GET)
-    public String findByHotelName(Model model,
+    public ResponseEntity<Hotel> findByHotelName(
                                   @ApiParam(value = "Name of the hotel", required = true)
                                   @PathVariable("name") String name) throws EntityNotFoundException {
         log.info("Invoke findByHotelName method");
-        Model hotelName = model.addAttribute("hotelName", hotelService.findByHotelName(name));
-        return "hotelName";
+        return new ResponseEntity<>(hotelService.findByHotelName(name),HttpStatus.OK);
     }
 
     @ApiOperation(value = "Displays hotels in given city", response = List.class)

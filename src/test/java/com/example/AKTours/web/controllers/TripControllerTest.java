@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
 ;
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static org.assertj.core.internal.bytebuddy.matcher.ElementMatchers.is;
@@ -33,6 +34,7 @@ public class TripControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
     @MockBean
     private TripService tripService;
 

@@ -1,20 +1,17 @@
 package com.example.AKTours.web.service;
 
 import com.example.AKTours.model.entity.Country;
-import com.example.AKTours.model.entity.Hotel;
 import com.example.AKTours.repository.CountryRepository;
-import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.stereotype.Service;
+
 @Log4j2
 @Service
 public class CountryService {
 
-    // @Autowired
     private final CountryRepository countryRepository;
 
     public CountryService(CountryRepository countryRepository) {
@@ -30,10 +27,10 @@ public class CountryService {
 
     public Country findByCountryName(String name) {
         log.info("Invoke CountryRepository findByCountryName using " + name);
-
         return countryRepository.findCountryByName(name);
     }
-    public List<Country> findCountryByContinentName(String name){
+
+    public List<Country> findCountryByContinentName(String name) {
         log.info("Invoke CountryRepository findCountryByContinent_name using " + name);
         return StreamSupport
                 .stream(countryRepository.findCountryByContinent_Name(name).spliterator(), false)

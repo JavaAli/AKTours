@@ -30,8 +30,10 @@ public class TripService {
     @Autowired
     private AirportRepository airportRepository;
 
-    public TripService(TripRepository tripRepository) {
+    public TripService(TripRepository tripRepository, AirportRepository airportRepository, HotelRepository hotelRepository) {
         this.tripRepository = tripRepository;
+        this.airportRepository = airportRepository;
+        this.hotelRepository = hotelRepository;
     }
 
     public List<Trip> findAllTrips() throws EntityNotFoundException {
@@ -137,7 +139,7 @@ public class TripService {
         return tripToSave;
     }
 
-    public Trip convertTripDtoToTrip(TripDto tripDto) throws EntityNotFoundException {
+    public Trip convertTripDtoToTrip(TripDto tripDto) {
         Trip trip = Trip.builder()
                 .numberOfDays(tripDto.getNumberOfDays())
                 .ReturnDate(tripDto.getReturnDate())
@@ -154,15 +156,13 @@ public class TripService {
 
     public Hotel findByHotelName(String name) throws EntityNotFoundException {
         log.info("Invoke hotel repository findByHotelName using " + name);
-        Hotel hotel = hotelRepository.findHotelByName(name)
+        return hotelRepository.findHotelByName(name)
                 .orElseThrow(() -> new EntityNotFoundException("Hotel with name " + name + "not exist in base"));
-        return hotel;
     }
 
     public Airport findAirportByName(String name) throws EntityNotFoundException {
         log.info("Invoke airport repository fingAirportByName using " + name);
-        Airport airport = airportRepository.findAirportByName(name)
+        return airportRepository.findAirportByName(name)
                 .orElseThrow(() -> new EntityNotFoundException("Airport with name " + name + "not exist in base"));
-        return airport;
     }
 }

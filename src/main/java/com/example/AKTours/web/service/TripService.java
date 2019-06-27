@@ -127,13 +127,9 @@ public class TripService {
         Hotel hotel = findByHotelName(tripDto.getHotel());
         Airport homeAirportToSave = findAirportByName(tripDto.getHomeAirport());
         Airport destAirportToSave = findAirportByName(tripDto.getDestinAirport());
-        log.info("add to hotel trip " + tripDto.toString());
         hotel.addTripToHotels(tripToSave);
-        log.info("add trip to home Airport");
         homeAirportToSave.addTripToTripsHome(tripToSave);
-        log.info("add trip to destination Airport");
         destAirportToSave.addTripToTripsDest(tripToSave);
-        log.info("Invoke CityRepository save new trip");
         tripRepository.save(tripToSave);
         log.info("New trip saved in repository");
         return tripToSave;

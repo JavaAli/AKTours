@@ -1,5 +1,6 @@
 package com.example.AKTours.web.controllers;
 
+import com.example.AKTours.model.dtos.TripDto;
 import com.example.AKTours.model.entity.Trip;
 import com.example.AKTours.web.exceptions.EntityNotFoundException;
 import com.example.AKTours.web.service.TripService;
@@ -100,7 +101,7 @@ public class TripController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully found trips")})
     @RequestMapping(value = "/tripsByDate/{date}", method = RequestMethod.GET)
-    public ResponseEntity<List> findTripsByContinentName(
+    public ResponseEntity<List> findTripsByDate(
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             @ApiParam(value = "Date of the trip", required = true)
             @PathVariable("date") LocalDate date) throws EntityNotFoundException {
@@ -108,16 +109,26 @@ public class TripController {
         return new ResponseEntity<>(tripService.findTripByDate(date), HttpStatus.OK);
     }
 
-
     @ApiOperation(value = "Displays trips by price", response = Trip.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully found trips")})
     @RequestMapping(value = "/tripsByPrice/{price}", method = RequestMethod.GET)
-    public ResponseEntity<List> findTripsByContinentName(
+    public ResponseEntity<List> findTripsByPrice(
             @ApiParam(value = "Price of the trip", required = true)
             @PathVariable("price") BigDecimal price) throws EntityNotFoundException {
         log.info("Invoke findTripsByContinentName method");
         return new ResponseEntity<>(tripService.findTripByPrice(price), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Add new trip to base", response = TripDto.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successfully saved trip")})
+    @RequestMapping(value = "/trips", method = RequestMethod.POST)
+    public ResponseEntity<Object> saveTrips(
+            @ApiParam(value = "Trip to add", required = true)
+            @RequestBody TripDto tripDto) throws EntityNotFoundException {
+        log.info("Invoke addTrip method");
+        return new ResponseEntity<>(tripService.addTrip(tripDto), HttpStatus.CREATED);
     }
 }
 

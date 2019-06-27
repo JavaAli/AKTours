@@ -9,11 +9,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @Log4j2
 @RestController
-@Api(value="Hotel Management System")
+@Api(value = "Hotel Management System")
 @CrossOrigin(origins = "http://localhost:4200")
 
 public class HotelController {
@@ -24,7 +25,7 @@ public class HotelController {
         this.hotelService = hotelService;
     }
 
-    @ApiOperation(value = "Shows all hotels",response = Hotel.class)
+    @ApiOperation(value = "Shows all hotels", response = Hotel.class)
     @RequestMapping(value = "/hotels", method = RequestMethod.GET)
     public ResponseEntity<Object> hotels() {
         return new ResponseEntity<>(hotelService.findAll(), HttpStatus.OK);
@@ -35,8 +36,8 @@ public class HotelController {
             @ApiResponse(code = 200, message = "Successfully retrieved list of hotels of given standard")})
     @RequestMapping(value = "/show/{standard}", method = RequestMethod.GET)
     public ResponseEntity<List> hotelStandard(
-                                @ApiParam(value = "Number of stars", required = true)
-                                @PathVariable("standard") String standard) throws EntityNotFoundException {
+            @ApiParam(value = "Number of stars", required = true)
+            @PathVariable("standard") String standard) throws EntityNotFoundException {
         log.info("Invoke findHotelByStandard method");
         return new ResponseEntity<>(hotelService.findHotelByStandard(standard), HttpStatus.OK);
     }
@@ -45,12 +46,11 @@ public class HotelController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully found hotel")})
     @RequestMapping(value = "/name/{name}", method = RequestMethod.GET)
-    public String findByHotelName(Model model,
-                                  @ApiParam(value = "Name of the hotel", required = true)
-                                  @PathVariable("name") String name) throws EntityNotFoundException {
+    public ResponseEntity<Hotel> findByHotelName(
+            @ApiParam(value = "Name of the hotel", required = true)
+            @PathVariable("name") String name) throws EntityNotFoundException {
         log.info("Invoke findByHotelName method");
-        Model hotelName = model.addAttribute("hotelName", hotelService.findByHotelName(name));
-        return "hotelName";
+        return new ResponseEntity<>(hotelService.findByHotelName(name), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Displays hotels in given city", response = List.class)

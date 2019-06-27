@@ -1,7 +1,9 @@
 package com.example.AKTours.web.controllers;
 
+import com.example.AKTours.model.dtos.TripDto;
 import com.example.AKTours.model.entity.Trip;
 import com.example.AKTours.web.service.TripService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.core.StringContains;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,23 +15,21 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-;
-import static java.time.format.DateTimeFormatter.ofPattern;
-import static org.assertj.core.internal.bytebuddy.matcher.ElementMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(TripController.class)
 @RunWith(SpringRunner.class)
 public class TripControllerTest {
     private Trip trip;
+    private TripDto tripDto;
     private List<Trip> trips;
 
     @Autowired
@@ -37,6 +37,9 @@ public class TripControllerTest {
 
     @MockBean
     private TripService tripService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Before
     public void setUp() {
@@ -51,6 +54,20 @@ public class TripControllerTest {
                 .id(1L)
                 .boardType("BB")
                 .promoPrice(BigDecimal.valueOf(3400))
+                .build();
+        tripDto = TripDto.builder()
+                .ReturnDate(LocalDate.of(2019, 3, 3).plusWeeks(2))
+                .DepartureDate(LocalDate.of(2019, 3, 3))
+                .childrenVacancy(1)
+                .adultVacancy(3)
+                .childrenPrice(3000)
+                .adultPrice(4000)
+                .numberOfDays(14)
+                .boardType("BB")
+                .promoPrice(3400)
+                .hotel("Zacisze")
+                .homeAirport("Balice")
+                .destinAirport("Changi")
                 .build();
         trips = new ArrayList<>();
         trips.add(trip);
@@ -117,5 +134,16 @@ public class TripControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$[0].boardType", new StringContains("BB")));
+    }
+
+    @Test
+    public void addNewTrip() throws Exception {
+        Mockito.when(tripService.addTrip(tripDto)).thenReturn(trip);
+        mockMvc.perform(post("/trips")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(tripDto)))
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("boardType", new StringContains("BB")));
     }
 }

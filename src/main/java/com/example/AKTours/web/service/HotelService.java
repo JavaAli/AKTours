@@ -40,18 +40,6 @@ public class HotelService {
         }
     }
 
-    public List<Hotel> findByHotelName(String name) throws EntityNotFoundException {
-        log.info("Invoke hotel repository findByHotelName using " + name);
-        if (!hotelRepository.findHotelByName(name).isEmpty()) {
-            List<Hotel> hotels = StreamSupport.stream(hotelRepository.findHotelByName(name)
-                    .spliterator(), false)
-                    .collect(Collectors.toList());
-            return hotels;
-        } else {
-            throw new EntityNotFoundException("Not found any hotel with name: " + name);
-        }
-    }
-
     public List<Hotel> findHotelByCityName(String name) {
         log.info("Invoke Hotel Repository find hotels by city using " + name);
         String hilton = "London";
@@ -70,8 +58,12 @@ public class HotelService {
         } else {
             return null;
         }
-
-
     }
 
+    public Hotel findByHotelName(String name) throws EntityNotFoundException {
+        log.info("Invoke hotel repository findByHotelName using " + name);
+        Hotel hotel = hotelRepository.findHotelByName(name)
+                .orElseThrow(() -> new EntityNotFoundException("Hotel with name " + name + "not exist in base"));
+        return hotel;
+    }
 }

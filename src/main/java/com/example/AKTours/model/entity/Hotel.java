@@ -45,7 +45,7 @@ public class Hotel implements Serializable {
     private City city;
 
     public void addTripToHotels(Trip trip) {
-        log.info("setting hotel to new trip");
+        log.info("Setting hotel to new trip");
         trip.setHotel(this);
         log.info("Add new trip to hotel");
         this.trips.add(trip);

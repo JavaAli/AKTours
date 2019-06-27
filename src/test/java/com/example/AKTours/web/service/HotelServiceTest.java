@@ -69,10 +69,11 @@ public class HotelServiceTest {
 
     @Test
     public void findByHotelName() throws EntityNotFoundException {
-        Mockito.when(hotelRepository.findHotelByName(Mockito.anyString())).thenReturn(Optional.of(selectedHotels.get(0)));
+        Mockito.when(hotelRepository.findHotelByName(Mockito.anyString())).thenReturn(Optional.of(hotelTwo));
         Hotel result = hotelService.findByHotelName("Bambino");
         assertThat(result.getId()).isEqualTo(2L);
     }
+
     @Test(expected = EntityNotFoundException.class)
     public void findNonExcistingHotel() throws EntityNotFoundException {
 //        Mockito.when(hotelRepository.findHotelByName(Mockito.anyString())).thenReturn();

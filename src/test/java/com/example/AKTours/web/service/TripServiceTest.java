@@ -35,15 +35,15 @@ public class TripServiceTest {
     private TripDto tripDto;
     private List<Trip> trips;
     private Airport airport;
-//    private Hotel hotel;
+    private Hotel hotel;
+
     @MockBean
     private TripRepository tripRepository;
     @MockBean
     private HotelRepository hotelRepository;
     @MockBean
     private AirportRepository airportRepository;
-    @MockBean
-    Hotel hotel;
+
     @Before
     public void setUp() {
         tripService = new TripService(tripRepository,airportRepository,hotelRepository);

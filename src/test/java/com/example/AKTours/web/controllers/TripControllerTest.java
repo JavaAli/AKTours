@@ -2,7 +2,6 @@ package com.example.AKTours.web.controllers;
 
 import com.example.AKTours.model.dtos.TripDto;
 import com.example.AKTours.model.entity.Trip;
-import com.example.AKTours.web.exceptions.EntityNotFoundException;
 import com.example.AKTours.web.service.TripService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.core.StringContains;

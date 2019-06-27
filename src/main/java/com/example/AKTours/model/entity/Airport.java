@@ -2,6 +2,7 @@ package com.example.AKTours.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,12 +11,12 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
 
-@JsonIgnoreProperties({"tripsDestina", "tripsHome"})
-@Entity
-@Table(name = "Airports")
-@Data
 @AllArgsConstructor
+@Data
+@Entity
+@JsonIgnoreProperties({"tripsDestina", "tripsHome"})
 @NoArgsConstructor
+@Table(name = "Airports")
 public class Airport implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -44,6 +45,10 @@ public class Airport implements Serializable {
     public void addTripToTripsDest(Trip trip) {
         trip.setDestinAirport(this);
         this.tripsDestina.add(trip);
+    }
+
+    public Airport(String name) {
+        this.name = name;
     }
 
     @Override

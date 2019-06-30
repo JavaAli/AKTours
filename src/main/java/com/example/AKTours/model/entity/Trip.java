@@ -1,12 +1,26 @@
 package com.example.AKTours.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.*;
-import javax.persistence.*;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @JsonIgnoreProperties({"hotelService", "airportService"})
 @Builder
@@ -24,13 +38,13 @@ public class Trip implements Serializable {
     private Long id;
 
     @Column(name = "depart_date")
-    private LocalDate DepartureDate;
+    private LocalDate departureDate;
 
     @Column(name = "return_date")
-    private LocalDate ReturnDate;
+    private LocalDate returnDate;
 
     @Column(name = "number_days")
-    private int numberOfDays;
+    private long numberOfDays;
 
     @Column(name = "board_type")
     private String boardType;
@@ -62,10 +76,10 @@ public class Trip implements Serializable {
     @JoinColumn(name = "destin_airport_id_pk")
     private Airport destinAirport;
 
-    public Trip(LocalDate departureDate, LocalDate returnDate, int numberOfDays, String boardType, BigDecimal adultPrice,
+    public Trip(LocalDate departureDate, LocalDate returnDate, long numberOfDays, String boardType, BigDecimal adultPrice,
                 BigDecimal childrenPrice, BigDecimal promoPrice, int adultVacancy, int childrenVacancy) {
-        DepartureDate = departureDate;
-        ReturnDate = returnDate;
+        this.departureDate = departureDate;
+        this.returnDate = returnDate;
         this.numberOfDays = numberOfDays;
         this.boardType = boardType;
         this.adultPrice = adultPrice;
@@ -82,8 +96,8 @@ public class Trip implements Serializable {
         Trip trip = (Trip) o;
         return numberOfDays == trip.numberOfDays &&
                 id.equals(trip.id) &&
-                DepartureDate.equals(trip.DepartureDate) &&
-                ReturnDate.equals(trip.ReturnDate) &&
+                departureDate.equals(trip.departureDate) &&
+                returnDate.equals(trip.returnDate) &&
                 boardType.equals(trip.boardType) &&
                 adultPrice.equals(trip.adultPrice) &&
                 childrenPrice.equals(trip.childrenPrice) &&
@@ -95,7 +109,7 @@ public class Trip implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, DepartureDate, ReturnDate, numberOfDays, boardType, adultPrice, childrenPrice,
+        return Objects.hash(id, departureDate, returnDate, numberOfDays, boardType, adultPrice, childrenPrice,
                 promoPrice, hotel, homeAirport, destinAirport);
     }
 
@@ -103,8 +117,8 @@ public class Trip implements Serializable {
     public String toString() {
         return "Trip{" +
                 "id=" + id +
-                ", DepartureDate=" + DepartureDate +
-                ", ReturnDate=" + ReturnDate +
+                ", departureDate=" + departureDate +
+                ", returnDate=" + returnDate +
                 ", numberOfDays=" + numberOfDays +
                 ", boardType='" + boardType + '\'' +
                 ", adultPrice=" + adultPrice +

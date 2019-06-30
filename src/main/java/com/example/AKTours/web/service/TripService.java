@@ -7,11 +7,13 @@ import com.example.AKTours.model.entity.Trip;
 import com.example.AKTours.repository.AirportRepository;
 import com.example.AKTours.repository.HotelRepository;
 import com.example.AKTours.repository.TripRepository;
+import com.example.AKTours.web.exceptions.DuplicateTripsException;
 import com.example.AKTours.web.exceptions.EntityNotFoundException;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -121,8 +123,12 @@ public class TripService {
     }
 
     @Transactional
-    public Trip addTrip(TripDto tripDto) throws EntityNotFoundException {
+    public Trip addTrip(TripDto tripDto) throws EntityNotFoundException, DuplicateTripsException {
         log.info("Invoke convertToTrip method");
+        if (findMatchingTrip(tripDto.getBoardType(), tripDto.getDepartureDate(), tripDto.getHomeAirport(), tripDto.getHotel(),
+                tripDto.getReturnDate(), tripDto.getDestinAirport()).isPresent()) {
+            throw new DuplicateTripsException("Trip with that data already exists in database");
+        }
         Trip tripToSave = convertTripDtoToTrip(tripDto);
         Hotel hotel = findByHotelName(tripDto.getHotel());
         Airport homeAirportToSave = findAirportByName(tripDto.getHomeAirport());
@@ -138,8 +144,8 @@ public class TripService {
     public Trip convertTripDtoToTrip(TripDto tripDto) {
         Trip trip = Trip.builder()
                 .numberOfDays(tripDto.getNumberOfDays())
-                .ReturnDate(tripDto.getReturnDate())
-                .DepartureDate(tripDto.getDepartureDate())
+                .returnDate(tripDto.getReturnDate())
+                .departureDate(tripDto.getDepartureDate())
                 .adultPrice(BigDecimal.valueOf(tripDto.getAdultPrice()))
                 .childrenPrice(BigDecimal.valueOf(tripDto.getChildrenPrice()))
                 .promoPrice(BigDecimal.valueOf(tripDto.getPromoPrice()))
@@ -153,12 +159,18 @@ public class TripService {
     public Hotel findByHotelName(String name) throws EntityNotFoundException {
         log.info("Invoke hotel repository findByHotelName using " + name);
         return hotelRepository.findHotelByName(name)
-                .orElseThrow(() -> new EntityNotFoundException("Hotel with name " + name + "not exist in base"));
+                .orElseThrow(() -> new EntityNotFoundException("Hotel with name " + name + " not exist in base"));
     }
 
     public Airport findAirportByName(String name) throws EntityNotFoundException {
         log.info("Invoke airport repository fingAirportByName using " + name);
         return airportRepository.findAirportByName(name)
-                .orElseThrow(() -> new EntityNotFoundException("Airport with name " + name + "not exist in base"));
+                .orElseThrow(() -> new EntityNotFoundException("Airport with name " + name + " not exist in base"));
+    }
+
+    public Optional<Trip> findMatchingTrip(String boardType, LocalDate departureDate, String homeAirport_name,
+                                           String hotel_name, LocalDate returnDate, String destinAirport_name) {
+        log.info("Invoke tripRepository findTripByData");
+        return tripRepository.findTripByBoardTypeAndDepartureDateAndHomeAirport_NameAndHotel_NameAndReturnDateAndDestinAirport_Name(boardType, departureDate, homeAirport_name, hotel_name, returnDate, destinAirport_name);
     }
 }

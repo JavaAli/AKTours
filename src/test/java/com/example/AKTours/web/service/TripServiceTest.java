@@ -8,19 +8,19 @@ import com.example.AKTours.repository.AirportRepository;
 import com.example.AKTours.repository.HotelRepository;
 import com.example.AKTours.repository.TripRepository;
 import com.example.AKTours.web.exceptions.EntityNotFoundException;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -46,7 +46,7 @@ public class TripServiceTest {
 
     @Before
     public void setUp() {
-        tripService = new TripService(tripRepository,airportRepository,hotelRepository);
+        tripService = new TripService(tripRepository, airportRepository, hotelRepository);
         trips = new ArrayList<>();
         hotel = Hotel.builder()
                 .id(1L)
@@ -56,8 +56,8 @@ public class TripServiceTest {
                 .trips(null)
                 .build();
         tripDto = TripDto.builder()
-                .ReturnDate(LocalDate.of(2019, 3, 3).plusWeeks(2))
-                .DepartureDate(LocalDate.of(2019, 3, 3))
+                .returnDate(LocalDate.of(2019, 3, 3).plusWeeks(2))
+                .departureDate(LocalDate.of(2019, 3, 3))
                 .childrenVacancy(1)
                 .adultVacancy(3)
                 .childrenPrice(3000)
@@ -71,8 +71,8 @@ public class TripServiceTest {
                 .build();
         airport = new Airport("Changi");
         trip = Trip.builder()
-                .ReturnDate(LocalDate.of(2019, 3, 3).plusWeeks(2))
-                .DepartureDate(LocalDate.of(2019, 3, 3))
+                .returnDate(LocalDate.of(2019, 3, 3).plusWeeks(2))
+                .departureDate(LocalDate.of(2019, 3, 3))
                 .childrenVacancy(1)
                 .adultVacancy(3)
                 .childrenPrice(BigDecimal.valueOf(3000))
@@ -165,8 +165,11 @@ public class TripServiceTest {
 
 //    @Test
 //    public void addTripWithSuccess() throws EntityNotFoundException {
-//        when(hotelRepository.findHotelByName(anyString())).thenReturn(Optional.ofNullable(hotel));
-//        when(airportRepository.findAirportByName(anyString())).thenReturn(Optional.ofNullable(airport));
+//
+//        when(tripRepository.findTripByBoardTypeAndDepartureDateAndHomeAirport_NameAndHotel_NameAndReturnDateAndDestinAirport_Name(
+//                Mockito.anyString(), Mockito.any(), Mockito.anyString(), Mockito.anyString(), Mockito.any(), Mockito.anyString())).thenReturn(null);
+//        when(hotelRepository.findHotelByName(anyString())).thenReturn(Optional.of(hotel));
+//        when(airportRepository.findAirportByName(anyString())).thenReturn(Optional.of(airport));
 //        when(tripRepository.save(any())).thenReturn(trip);
 //        doNothing().when(mock(Hotel.class)).addTripToHotels(any(Trip.class));
 //        doNothing().when(mock(Airport.class)).addTripToTripsHome(any(Trip.class));
@@ -181,10 +184,38 @@ public class TripServiceTest {
         Hotel result = tripService.findByHotelName("Bambino");
         assertThat(result.getId()).isEqualTo(1L);
     }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void findByHotelNameWithNoResult() throws EntityNotFoundException {
+        when(hotelRepository.findHotelByName(anyString())).thenReturn(Optional.empty());
+        tripService.findByHotelName("Bambino");
+    }
+
     @Test
     public void findByAirportName() throws EntityNotFoundException {
         when(airportRepository.findAirportByName(anyString())).thenReturn(Optional.of(airport));
         Airport result = tripService.findAirportByName("Some");
         assertThat(result.getName()).isEqualTo("Changi");
+    }
+    @Test(expected = EntityNotFoundException.class)
+    public void findByAirportNameWithNoresult() throws EntityNotFoundException {
+        when(airportRepository.findAirportByName(anyString())).thenReturn(Optional.empty());
+        tripService.findAirportByName("Some");
+    }
+
+    @Test
+    public void shouldFindExistingTripByData() {
+        when(tripRepository.findTripByBoardTypeAndDepartureDateAndHomeAirport_NameAndHotel_NameAndReturnDateAndDestinAirport_Name(
+                Mockito.anyString(), Mockito.any(), Mockito.anyString(), Mockito.anyString(), Mockito.any(), Mockito.anyString())).thenReturn(Optional.ofNullable(trip));
+        Optional<Trip> result = tripService.findMatchingTrip("a", LocalDate.now(), "a", "x", LocalDate.now(), "z");
+        assertThat(result.get().getBoardType()).isEqualTo("BB");
+    }
+
+    @Test
+    public void shouldNotFindExistingTripByData() {
+        when(tripRepository.findTripByBoardTypeAndDepartureDateAndHomeAirport_NameAndHotel_NameAndReturnDateAndDestinAirport_Name(
+                Mockito.anyString(), Mockito.any(), Mockito.anyString(), Mockito.anyString(), Mockito.any(), Mockito.anyString())).thenReturn(null);
+        Optional<Trip> result = tripService.findMatchingTrip("a", LocalDate.now(), "a", "x", LocalDate.now(), "z");
+        assertThat(result).isNull();
     }
 }

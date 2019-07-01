@@ -2,6 +2,8 @@ package com.example.AKTours.web.controllers;
 
 import com.example.AKTours.model.dtos.TripDto;
 import com.example.AKTours.model.entity.Trip;
+import com.example.AKTours.web.exceptions.DuplicateTripsException;
+import com.example.AKTours.web.exceptions.EntityNotFoundException;
 import com.example.AKTours.web.service.TripService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.core.StringContains;
@@ -44,11 +46,11 @@ public class TripControllerTest {
     @Before
     public void setUp() {
         trip = Trip.builder()
-                .ReturnDate(LocalDate.of(2019, 3, 3).plusWeeks(2))
-                .DepartureDate(LocalDate.of(2019, 3, 3))
+                .returnDate(LocalDate.now().plusWeeks(2).plusDays(1))
+                .departureDate(LocalDate.now().plusDays(1))
                 .childrenVacancy(1)
                 .adultVacancy(3)
-                .childrenPrice(BigDecimal.valueOf(3000))
+                .childrenPrice(BigDecimal.valueOf(1500))
                 .adultPrice(BigDecimal.valueOf(4000))
                 .numberOfDays(14)
                 .id(1L)
@@ -56,11 +58,11 @@ public class TripControllerTest {
                 .promoPrice(BigDecimal.valueOf(3400))
                 .build();
         tripDto = TripDto.builder()
-                .ReturnDate(LocalDate.of(2019, 3, 3).plusWeeks(2))
-                .DepartureDate(LocalDate.of(2019, 3, 3))
+                .returnDate(LocalDate.now().plusWeeks(2).plusDays(1))
+                .departureDate(LocalDate.now().plusDays(1))
                 .childrenVacancy(1)
                 .adultVacancy(3)
-                .childrenPrice(3000)
+                .childrenPrice(1500)
                 .adultPrice(4000)
                 .numberOfDays(14)
                 .boardType("BB")
@@ -137,7 +139,7 @@ public class TripControllerTest {
     }
 
     @Test
-    public void addNewTrip() throws Exception {
+    public void addNewTripWithSuccess() throws Exception {
         Mockito.when(tripService.addTrip(tripDto)).thenReturn(trip);
         mockMvc.perform(post("/trips")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -145,5 +147,131 @@ public class TripControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("boardType", new StringContains("BB")));
+    }
+
+    @Test
+    public void shouldThrowValidationErrorToAddNewTrip_DatesInPast() throws Exception {
+        tripDto = TripDto.builder()
+                .returnDate(LocalDate.now().plusWeeks(2).plusDays(1))
+                .departureDate(LocalDate.now().minusDays(1))
+                .childrenVacancy(1).adultVacancy(3)
+                .childrenPrice(1500).adultPrice(4000).promoPrice(3400)
+                .numberOfDays(16).boardType("BB")
+                .hotel("Zacisze").homeAirport("Balice").destinAirport("Changi")
+                .build();
+        mockMvc.perform(post("/trips")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(tripDto)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("ApiError.message",
+                        new StringContains("Departure date shouldn't be in the past")));
+    }
+
+    @Test
+    public void shouldThrowValidationErrorForAddNewTrip_WronNumberOfDays() throws Exception {
+        tripDto = TripDto.builder()
+                .returnDate(LocalDate.now().plusWeeks(2).plusDays(1))
+                .departureDate(LocalDate.now().plusDays(1))
+                .childrenVacancy(1).adultVacancy(3)
+                .childrenPrice(1500).adultPrice(4000).promoPrice(3400)
+                .numberOfDays(16).boardType("BB")
+                .hotel("Zacisze").homeAirport("Balice").destinAirport("Changi")
+                .build();
+        mockMvc.perform(post("/trips")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(tripDto)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("ApiError.message",
+                        new StringContains("Number of days do not match depart and return date")));
+    }
+
+    @Test
+    public void shouldThrowValidationErrorForAddNewTrip_WrongBoardType() throws Exception {
+        tripDto = TripDto.builder()
+                .returnDate(LocalDate.now().plusWeeks(2).plusDays(1))
+                .departureDate(LocalDate.now().plusDays(1))
+                .childrenVacancy(1).adultVacancy(3)
+                .childrenPrice(1500).adultPrice(4000).promoPrice(3400)
+                .numberOfDays(14).boardType("BBrty")
+                .hotel("Zacisze").homeAirport("Balice").destinAirport("Changi")
+                .build();
+        mockMvc.perform(post("/trips")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(tripDto)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("ApiError.message",
+                        new StringContains("Board type should have only two capital letters")));
+    }
+
+    @Test
+    public void shouldThrowValidationErrorForAddNewTrip_PromoPriceIsHigherThanNormal() throws Exception {
+        tripDto = TripDto.builder()
+                .returnDate(LocalDate.now().plusWeeks(2).plusDays(1))
+                .departureDate(LocalDate.now().plusDays(1))
+                .childrenVacancy(1).adultVacancy(3)
+                .childrenPrice(1500).adultPrice(4000).promoPrice(5400)
+                .numberOfDays(16).boardType("BB")
+                .hotel("Zacisze").homeAirport("Balice").destinAirport("Changi")
+                .build();
+        mockMvc.perform(post("/trips")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(tripDto)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("ApiError.message",
+                        new StringContains("Sale price should be lower than ordinary price")));
+    }
+
+    @Test
+    public void shouldThrowValidationErrorToAddNewTrip_LackOfMandatoryValue() throws Exception {
+        tripDto = TripDto.builder()
+                .returnDate(LocalDate.now().plusWeeks(2).plusDays(1))
+                .departureDate(LocalDate.now().plusDays(1))
+                .childrenVacancy(1).adultVacancy(3)
+                .childrenPrice(1500).adultPrice(4000).promoPrice(3400)
+                .numberOfDays(14).boardType("BB")
+                .hotel("Zacisze").destinAirport("Changi")
+                .build();
+        mockMvc.perform(post("/trips")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(tripDto)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("ApiError.message",
+                        new StringContains("Field Home Airport is mandatory")));
+    }
+
+    @Test
+    public void shouldThrowValidationErrorToAddNewTrip_TripZeroDaysLong() throws Exception {
+        tripDto = TripDto.builder()
+                .returnDate(LocalDate.now().plusDays(1))
+                .departureDate(LocalDate.now().plusDays(1))
+                .childrenVacancy(1).adultVacancy(3)
+                .childrenPrice(1500).adultPrice(4000).promoPrice(3400)
+                .numberOfDays(0).boardType("BB")
+                .hotel("Zacisze").destinAirport("Changi").homeAirport("Pyrzowice")
+                .build();
+        mockMvc.perform(post("/trips")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(tripDto)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("ApiError.message",
+                        new StringContains("Trip should take minimum 1 day")));
+    }
+
+    @Test
+    public void shouldThrowDuplicateErrorToAddNewTrip() throws Exception {
+        Mockito.when(tripService.addTrip(tripDto)).thenThrow(DuplicateTripsException.class);
+        mockMvc.perform(post("/trips")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(tripDto)))
+                .andExpect(status().isConflict());
+    }
+
+    @Test
+    public void shouldThrowEntityNotFound() throws Exception {
+        Mockito.when(tripService.addTrip(tripDto)).thenThrow(EntityNotFoundException.class);
+        mockMvc.perform(post("/trips")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(tripDto)))
+                .andExpect(status().isNotFound());
     }
 }

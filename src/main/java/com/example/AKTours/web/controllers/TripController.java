@@ -2,6 +2,7 @@ package com.example.AKTours.web.controllers;
 
 import com.example.AKTours.model.dtos.TripDto;
 import com.example.AKTours.model.entity.Trip;
+import com.example.AKTours.web.exceptions.DuplicateTripsException;
 import com.example.AKTours.web.exceptions.EntityNotFoundException;
 import com.example.AKTours.web.service.TripService;
 import io.swagger.annotations.ApiOperation;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -122,11 +124,14 @@ public class TripController {
 
     @ApiOperation(value = "Add new trip to base", response = TripDto.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Successfully saved trip")})
+            @ApiResponse(code = 201, message = "Successfully saved trip"),
+            @ApiResponse(code = 400, message = "Validation errors or JSON Parse error"),
+            @ApiResponse(code = 404, message = "Given hotel or airport not exist in base"),
+            @ApiResponse(code = 409, message = "Trip with given data already exists in database")})
     @RequestMapping(value = "/trips", method = RequestMethod.POST)
     public ResponseEntity<Object> saveTrips(
             @ApiParam(value = "Trip to add", required = true)
-            @RequestBody TripDto tripDto) throws EntityNotFoundException {
+            @Valid @RequestBody TripDto tripDto) throws EntityNotFoundException, DuplicateTripsException {
         log.info("Invoke addTrip method");
         return new ResponseEntity<>(tripService.addTrip(tripDto), HttpStatus.CREATED);
     }

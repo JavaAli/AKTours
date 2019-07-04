@@ -173,4 +173,9 @@ public class TripService {
         log.info("Invoke tripRepository findTripByData");
         return tripRepository.findTripByBoardTypeAndDepartureDateAndHomeAirport_NameAndHotel_NameAndReturnDateAndDestinAirport_Name(boardType, departureDate, homeAirport_name, hotel_name, returnDate, destinAirport_name);
     }
+    public Trip displayTripById(Long id){
+        log.info("Invoke tripRepository getOne");
+        return tripRepository.getOneById(id)
+                .orElseThrow(()->new javax.persistence.EntityNotFoundException("Trip not found"));
+    }
 }

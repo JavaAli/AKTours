@@ -5,11 +5,7 @@ import com.example.AKTours.model.entity.Trip;
 import com.example.AKTours.web.exceptions.DuplicateTripsException;
 import com.example.AKTours.web.exceptions.EntityNotFoundException;
 import com.example.AKTours.web.service.TripService;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import io.swagger.annotations.Api;
+import io.swagger.annotations.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -134,6 +130,17 @@ public class TripController {
             @Valid @RequestBody TripDto tripDto) throws EntityNotFoundException, DuplicateTripsException {
         log.info("Invoke addTrip method");
         return new ResponseEntity<>(tripService.addTrip(tripDto), HttpStatus.CREATED);
+    }
+
+    @ApiOperation(value = "Displays trips by id", response = Trip.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully found trips")})
+    @RequestMapping(value = "/trips/{id}", method = RequestMethod.GET)
+    public ResponseEntity<Trip> findTripsById(
+            @ApiParam(value = "Id of Trip", required = true)
+            @PathVariable("id") Long tripId){
+        log.info("Invoke findTripsByContinentName method");
+        return new ResponseEntity<>(tripService.displayTripById(tripId), HttpStatus.OK);
     }
 }
 

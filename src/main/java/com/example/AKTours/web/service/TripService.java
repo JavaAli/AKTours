@@ -4,23 +4,25 @@ import com.example.AKTours.model.dtos.TripDto;
 import com.example.AKTours.model.entity.Airport;
 import com.example.AKTours.model.entity.Hotel;
 import com.example.AKTours.model.entity.Trip;
+import com.example.AKTours.model.entity.Visitor;
 import com.example.AKTours.repository.AirportRepository;
 import com.example.AKTours.repository.HotelRepository;
 import com.example.AKTours.repository.TripRepository;
 import com.example.AKTours.web.exceptions.DuplicateTripsException;
 import com.example.AKTours.web.exceptions.EntityNotFoundException;
+import com.example.AKTours.web.exceptions.NoVacancysException;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-
-import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Log4j2
 @Service
@@ -173,9 +175,36 @@ public class TripService {
         log.info("Invoke tripRepository findTripByData");
         return tripRepository.findTripByBoardTypeAndDepartureDateAndHomeAirport_NameAndHotel_NameAndReturnDateAndDestinAirport_Name(boardType, departureDate, homeAirport_name, hotel_name, returnDate, destinAirport_name);
     }
-    public Trip displayTripById(Long id){
+
+    public Trip displayTripById(Long id) {
         log.info("Invoke tripRepository getOne");
         return tripRepository.getOneById(id)
-                .orElseThrow(()->new javax.persistence.EntityNotFoundException("Trip not found"));
+                .orElseThrow(() -> new javax.persistence.EntityNotFoundException("Trip not found"));
+    }
+
+    @Transactional
+    public Trip addVisitorsToTrip(Long id, Visitor visitor) throws NoVacancysException {
+        Trip tripToAdd = tripRepository.getOneById(id)
+                .orElseThrow(() -> new javax.persistence.EntityNotFoundException("Trip not found"));
+        if (visitor.getAge() < 14) {
+            if (tripToAdd.getChildrenVacancy() > 0) {
+                int newChildrenVacancy = tripToAdd.getChildrenVacancy() - 1;
+                tripToAdd.setChildrenVacancy(newChildrenVacancy);
+            } else {
+                throw new NoVacancysException("No children vacancy left");
+            }
+        } else {
+            if(tripToAdd.getAdultVacancy()>0){
+            int newAdultVacancy = tripToAdd.getAdultVacancy() - 1;
+            tripToAdd.setAdultVacancy(newAdultVacancy);}
+            else{
+                throw new NoVacancysException("No adult vacancy left");
+            }
+        }
+        Set<Visitor> listOfVisitors = tripToAdd.getVisitors();
+        listOfVisitors.add(visitor);
+        tripToAdd.setVisitors(listOfVisitors);
+        tripRepository.save(tripToAdd);
+        return tripToAdd;
     }
 }

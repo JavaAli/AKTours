@@ -2,8 +2,10 @@ package com.example.AKTours.web.controllers;
 
 import com.example.AKTours.model.dtos.TripDto;
 import com.example.AKTours.model.entity.Trip;
+import com.example.AKTours.model.entity.Visitor;
 import com.example.AKTours.web.exceptions.DuplicateTripsException;
 import com.example.AKTours.web.exceptions.EntityNotFoundException;
+import com.example.AKTours.web.exceptions.NoVacancysException;
 import com.example.AKTours.web.service.TripService;
 import io.swagger.annotations.*;
 import lombok.extern.log4j.Log4j2;
@@ -141,6 +143,22 @@ public class TripController {
             @PathVariable("id") Long tripId){
         log.info("Invoke findTripsByContinentName method");
         return new ResponseEntity<>(tripService.displayTripById(tripId), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Add visitors to trip", response = Trip.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successfully saved new version of Trip"),
+            @ApiResponse(code = 400, message = "Validation errors or JSON Parse error"),
+            @ApiResponse(code = 404, message = "Given trip not exist in base"),
+            @ApiResponse(code = 409, message = "Trip has no Vacancy left")})
+    @RequestMapping(value = "/trips/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<Object> buyTrip(
+            @ApiParam(value = "Id of Trip", required = true)
+            @PathVariable("id") Long tripId,
+            @ApiParam(value = "Visitor buying trip", required = true)
+            @RequestBody Visitor visitor) throws NoVacancysException {
+        log.info("Invoke addVisitorsToTrip method");
+        return new ResponseEntity<>(tripService.addVisitorsToTrip(tripId,visitor), HttpStatus.OK);
     }
 }
 

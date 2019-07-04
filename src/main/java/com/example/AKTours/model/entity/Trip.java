@@ -6,23 +6,15 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import java.util.Set;
+import javax.persistence.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@JsonIgnoreProperties({"hotelService", "airportService"})
+@JsonIgnoreProperties({"hotelService", "airportService","visitors"})
 @Builder
 @Entity
 @Table(name = "Trips")
@@ -75,6 +67,10 @@ public class Trip implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "destin_airport_id_pk")
     private Airport destinAirport;
+
+    @OneToMany(targetEntity = Visitor.class, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "trip_id_pk")
+    private Set<Visitor> visitors;
 
     public Trip(LocalDate departureDate, LocalDate returnDate, long numberOfDays, String boardType, BigDecimal adultPrice,
                 BigDecimal childrenPrice, BigDecimal promoPrice, int adultVacancy, int childrenVacancy) {

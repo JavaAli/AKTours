@@ -41,3 +41,7 @@
 # insert into trips (id, depart_date,return_date,adult_price,children_price,promo_price,board_type,home_airport_id_pk,destin_airport_id_pk,hotel_id_pk,number_days,adult_vacancy,children_vacancy)
 # values (4,'2019-06-23','2019-06-30',873.00,460.60,600.00,'FB',null,null,2,7,6,5);
 #
+# insert into visitors (id, first_name, last_name, city, street, street_nr,zip_code,age,trip_id_pk) value (1, 'Anna', 'Nowak', 'Katowice', 'Zamkowa','23/5','40-001',34,1);
+# insert into visitors (id, first_name, last_name, city, street, street_nr,zip_code,age,trip_id_pk) value (2, 'Bożena', 'Kowalska', 'Bytom', 'Parkowa','1/6K','43-901',60,2);
+# insert into visitors (id, first_name, last_name, city, street, street_nr,zip_code,age,trip_id_pk) value (3, 'Brajan', 'Nowak', 'Katowice', 'Zamkowa','23/5','40-001',8,1);
+# insert into visitors (id, first_name, last_name, city, street, street_nr,zip_code,age,trip_id_pk) value (4, 'Janusz', 'Anzorge', 'Zawiercie', 'Pokątna','4','32-031',52,2);

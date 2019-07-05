@@ -58,7 +58,7 @@ public class ToursExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ApiError> handleException(EntityNotFoundException ex, WebRequest request) {
         ApiError response = ApiError.builder()
                 .message(ex.getMessage())
-                .status(HttpStatus.BAD_REQUEST)
+                .status(HttpStatus.NOT_FOUND)
                 .description(request.getDescription(false))
                 .timestamp(LocalDateTime.now())
                 .build();
@@ -66,8 +66,8 @@ public class ToursExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({DuplicateTripsException.class})
-    public ResponseEntity<ApiError> handleException(DuplicateTripsException ex, WebRequest request) {
+    @ExceptionHandler({DuplicateEntityException.class})
+    public ResponseEntity<ApiError> handleException(DuplicateEntityException ex, WebRequest request) {
         ApiError response = ApiError.builder()
                 .message(ex.getMessage())
                 .status(HttpStatus.CONFLICT)
@@ -77,7 +77,17 @@ public class ToursExceptionHandler extends ResponseEntityExceptionHandler {
         log.error(ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
-
+    @ExceptionHandler({NoVacancysException.class})
+    public ResponseEntity<ApiError> handleException(NoVacancysException ex, WebRequest request) {
+        ApiError response = ApiError.builder()
+                .message(ex.getMessage())
+                .status(HttpStatus.NOT_ACCEPTABLE)
+                .description(request.getDescription(false))
+                .timestamp(LocalDateTime.now())
+                .build();
+        log.error(ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.NOT_ACCEPTABLE);
+    }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> globalExcpetionHandler(Exception ex) {
         ApiError response = ApiError.builder()

@@ -15,10 +15,13 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Builder
 public class Visitor implements Serializable {
+
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     @Column(name = "first_name")
     private String firstName;
     @Column(name = "last_name")
@@ -38,4 +41,17 @@ public class Visitor implements Serializable {
     @JoinColumn(name = "trip_id_pk")
     private Trip trip;
 
+    @Override
+    public String toString() {
+        return "Visitor{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", city='" + city + '\'' +
+                ", street='" + street + '\'' +
+                ", streetNr='" + streetNr + '\'' +
+                ", zipCode='" + zipCode + '\'' +
+                ", age=" + age +
+                '}';
+    }
 }

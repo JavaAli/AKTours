@@ -31,4 +31,8 @@ public interface TripRepository extends JpaRepository<Trip, Long> {
     List<Trip> findAllByAdultPriceLessThanEqual(BigDecimal price);
 
     Optional<Trip> findTripByBoardTypeAndDepartureDateAndHomeAirport_NameAndHotel_NameAndReturnDateAndDestinAirport_Name(String boardType, LocalDate departureDate, String homeAirport_name, String hotel_name, LocalDate returnDate, String destinAirport_name);
+
+    Optional<Trip> getOneById(Long tripId);
+
+
 }

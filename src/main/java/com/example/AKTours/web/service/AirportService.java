@@ -3,13 +3,12 @@ package com.example.AKTours.web.service;
 import com.example.AKTours.model.entity.Airport;
 import com.example.AKTours.repository.AirportRepository;
 import com.example.AKTours.web.exceptions.EntityNotFoundException;
-import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Log4j2
 @Service
@@ -53,7 +52,6 @@ public class AirportService {
         } else {
             return null;
         }
-
     }
 
 }

@@ -2,8 +2,10 @@ package com.example.AKTours.web.controllers;
 
 import com.example.AKTours.model.dtos.TripDto;
 import com.example.AKTours.model.entity.Trip;
-import com.example.AKTours.web.exceptions.DuplicateTripsException;
+import com.example.AKTours.model.entity.Visitor;
+import com.example.AKTours.web.exceptions.DuplicateEntityException;
 import com.example.AKTours.web.exceptions.EntityNotFoundException;
+import com.example.AKTours.web.exceptions.NoVacancysException;
 import com.example.AKTours.web.service.TripService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.core.StringContains;
@@ -23,8 +25,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(TripController.class)
@@ -33,6 +34,7 @@ public class TripControllerTest {
     private Trip trip;
     private TripDto tripDto;
     private List<Trip> trips;
+    private Visitor visitor;
 
     @Autowired
     private MockMvc mockMvc;
@@ -45,6 +47,15 @@ public class TripControllerTest {
 
     @Before
     public void setUp() {
+        visitor = Visitor.builder()
+                .firstName("Anna")
+                .lastName("Kowalska")
+                .city("Kraków")
+                .street("Podwale")
+                .streetNr("45")
+                .zipCode("32-345")
+                .id(1L)
+                .build();
         trip = Trip.builder()
                 .returnDate(LocalDate.now().plusWeeks(2).plusDays(1))
                 .departureDate(LocalDate.now().plusDays(1))
@@ -259,7 +270,7 @@ public class TripControllerTest {
 
     @Test
     public void shouldThrowDuplicateErrorToAddNewTrip() throws Exception {
-        Mockito.when(tripService.addTrip(tripDto)).thenThrow(DuplicateTripsException.class);
+        Mockito.when(tripService.addTrip(tripDto)).thenThrow(DuplicateEntityException.class);
         mockMvc.perform(post("/trips")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(tripDto)))
@@ -273,5 +284,49 @@ public class TripControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(tripDto)))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void addNewVisitorToTripWithSuccess() throws Exception {
+        Mockito.when(tripService.addVisitorsToTrip(Mockito.anyLong(), Mockito.any())).thenReturn(trip);
+        mockMvc.perform(put("/trips/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(visitor)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("boardType", new StringContains("BB")));
+    }
+
+    @Test
+    public void shouldThrowEntityNotFoundExceptionWhenAddVisitor() throws Exception {
+        Mockito.when(tripService.addVisitorsToTrip(Mockito.anyLong(), Mockito.any()))
+                .thenThrow(EntityNotFoundException.class);
+        mockMvc.perform(put("/trips/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(visitor)))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
+    }
+
+    @Test
+    public void shouldThrowDuplicateEntityWhenAddVisitor() throws Exception {
+        Mockito.when(tripService.addVisitorsToTrip(Mockito.anyLong(), Mockito.any()))
+                .thenThrow(DuplicateEntityException.class);
+        mockMvc.perform(put("/trips/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(visitor)))
+                .andExpect(status().isConflict())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
+    }
+
+    @Test
+    public void shouldThrowNoVacancyWhenAddVisitor() throws Exception {
+        Mockito.when(tripService.addVisitorsToTrip(Mockito.anyLong(), Mockito.any()))
+                .thenThrow(NoVacancysException.class);
+        mockMvc.perform(put("/trips/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(visitor)))
+                .andExpect(status().isNotAcceptable())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
     }
 }

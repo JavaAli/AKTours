@@ -4,23 +4,26 @@ import com.example.AKTours.model.dtos.TripDto;
 import com.example.AKTours.model.entity.Airport;
 import com.example.AKTours.model.entity.Hotel;
 import com.example.AKTours.model.entity.Trip;
+import com.example.AKTours.model.entity.Visitor;
 import com.example.AKTours.repository.AirportRepository;
 import com.example.AKTours.repository.HotelRepository;
 import com.example.AKTours.repository.TripRepository;
-import com.example.AKTours.web.exceptions.DuplicateTripsException;
+import com.example.AKTours.repository.VisitorsRepository;
+import com.example.AKTours.web.exceptions.DuplicateEntityException;
 import com.example.AKTours.web.exceptions.EntityNotFoundException;
+import com.example.AKTours.web.exceptions.NoVacancysException;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-
-import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Log4j2
 @Service
@@ -31,11 +34,15 @@ public class TripService {
     private HotelRepository hotelRepository;
     @Autowired
     private AirportRepository airportRepository;
+    @Autowired
+    private VisitorsRepository visitorsRepository;
 
-    public TripService(TripRepository tripRepository, AirportRepository airportRepository, HotelRepository hotelRepository) {
+    public TripService(TripRepository tripRepository, AirportRepository airportRepository,
+                       HotelRepository hotelRepository, VisitorsRepository visitorsRepository) {
         this.tripRepository = tripRepository;
         this.airportRepository = airportRepository;
         this.hotelRepository = hotelRepository;
+        this.visitorsRepository = visitorsRepository;
     }
 
     public List<Trip> findAllTrips() throws EntityNotFoundException {
@@ -123,11 +130,11 @@ public class TripService {
     }
 
     @Transactional
-    public Trip addTrip(TripDto tripDto) throws EntityNotFoundException, DuplicateTripsException {
+    public Trip addTrip(TripDto tripDto) throws EntityNotFoundException, DuplicateEntityException {
         log.info("Invoke convertToTrip method");
         if (findMatchingTrip(tripDto.getBoardType(), tripDto.getDepartureDate(), tripDto.getHomeAirport(), tripDto.getHotel(),
                 tripDto.getReturnDate(), tripDto.getDestinAirport()).isPresent()) {
-            throw new DuplicateTripsException("Trip with that data already exists in database");
+            throw new DuplicateEntityException("Trip with that data already exists in database");
         }
         Trip tripToSave = convertTripDtoToTrip(tripDto);
         Hotel hotel = findByHotelName(tripDto.getHotel());
@@ -172,5 +179,51 @@ public class TripService {
                                            String hotel_name, LocalDate returnDate, String destinAirport_name) {
         log.info("Invoke tripRepository findTripByData");
         return tripRepository.findTripByBoardTypeAndDepartureDateAndHomeAirport_NameAndHotel_NameAndReturnDateAndDestinAirport_Name(boardType, departureDate, homeAirport_name, hotel_name, returnDate, destinAirport_name);
+    }
+
+    public Trip displayTripById(Long id) {
+        log.info("Invoke tripRepository getOne");
+        return tripRepository.getOneById(id)
+                .orElseThrow(() -> new javax.persistence.EntityNotFoundException("Trip not found"));
+    }
+
+    @Transactional
+    public Trip addVisitorsToTrip(Long id, Visitor visitor) throws NoVacancysException, EntityNotFoundException {
+        log.info("Invoke tripRepository getOneById using " + id);
+        Trip tripToAdd = tripRepository.getOneById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Trip not found"));
+        if (checkIfVisitorAlreadyEnlisted(id, visitor)) {
+            throw new DuplicateEntityException("Visitor is already enlisted on this trip");
+        }
+        if (visitor.getAge() < 14) {
+            if (tripToAdd.getChildrenVacancy() > 0) {
+                int newChildrenVacancy = tripToAdd.getChildrenVacancy() - 1;
+                log.info("Decreasing children vacancy in trip");
+                tripToAdd.setChildrenVacancy(newChildrenVacancy);
+            } else {
+                throw new NoVacancysException("No children vacancy left");
+            }
+        } else {
+            if (tripToAdd.getAdultVacancy() > 0) {
+                int newAdultVacancy = tripToAdd.getAdultVacancy() - 1;
+                log.info("Decreasing adult vacancy in trip");
+                tripToAdd.setAdultVacancy(newAdultVacancy);
+            } else {
+                throw new NoVacancysException("No adult vacancy left");
+            }
+        }
+        Set<Visitor> listOfVisitors = tripToAdd.getVisitors();
+        log.info("Add visitor " + visitor.toString() + " to trip");
+        listOfVisitors.add(visitor);
+        tripToAdd.setVisitors(listOfVisitors);
+        log.info("Saving updated trip to repository");
+        tripRepository.save(tripToAdd);
+        return tripToAdd;
+    }
+
+    public boolean checkIfVisitorAlreadyEnlisted(Long id, Visitor visitor) {
+        log.info("Invoke visitorRepository findVisitorByDataAndTripId id: " + id + " and " + visitor.toString());
+        return visitorsRepository.findVisitorByDataAndTripId(id, visitor.getFirstName(), visitor.getLastName(),
+                visitor.getCity(), visitor.getStreet(), visitor.getStreetNr()).isPresent();
     }
 }
